@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TaskCreator from "./TaskCreator";
-import Tasks from "./Tasks";
+import TasksBoard from "./TasksBoard";
 
 export default function Kanban() {
     const [groups, setGroups] = useState([
@@ -12,7 +12,7 @@ export default function Kanban() {
     return (
         <div className="container mx-auto">
             <TaskCreator />
-            <Tasks groups={groups} />
+            <TasksBoard groups={groups} />
         </div>
     );
 }

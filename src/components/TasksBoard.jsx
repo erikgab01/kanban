@@ -3,6 +3,7 @@ import { hexToRgb } from "../utility";
 
 export default function TasksBoard({ groups, setGroups }) {
     const [dragging, setDragging] = useState(false);
+    // useRef to maintain their values between rerenders
     const dragItem = useRef();
     const dragItemNode = useRef();
     function handleDragStart(e, item) {
@@ -60,13 +61,7 @@ export default function TasksBoard({ groups, setGroups }) {
                                 draggable
                                 key={task}
                                 onDragStart={(e) => handleDragStart(e, { groupI, taskI })}
-                                onDragEnter={
-                                    dragging
-                                        ? (e) => {
-                                              handleDragEnter(e, { groupI, taskI });
-                                          }
-                                        : null
-                                }
+                                onDragEnter={dragging ? (e) => handleDragEnter(e, { groupI, taskI }) : null}
                                 style={{ borderColor: group.color }}
                                 className="bg-white border-l-4 p-4 rounded-md"
                             >

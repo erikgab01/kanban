@@ -19,7 +19,7 @@ export default function TaskCreator({ setGroups }) {
                     onChange={(e) => setTaskName(e.target.value)}
                     type="text"
                     placeholder="Название задачи"
-                    className="border-2 rounded-md border-slate-300 placeholder-slate-400                        focus:outline-none focus:border-sky-500 indent-2 py-1"
+                    className="border-2 rounded-md border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 indent-2 py-1"
                 />
                 <button
                     onClick={addTask}

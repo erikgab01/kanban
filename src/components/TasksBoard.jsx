@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { hexToRgb } from "../utility";
 
@@ -51,6 +51,14 @@ export default function TasksBoard({ groups, setGroups }) {
 
         return result;
     }
+    const getItemStyle = (isDragging, draggableStyle, draggingOver, defaultColor) => ({
+        // some basic styles to make the items look a bit nicer
+        borderColor: draggingOver ? groups[draggingOver].color : defaultColor,
+        // change background colour if dragging
+
+        // styles we need to apply on draggables
+        ...draggableStyle,
+    });
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <section className="flex gap-12 mt-8">
@@ -58,19 +66,19 @@ export default function TasksBoard({ groups, setGroups }) {
                     const { r, g, b } = hexToRgb(group.color);
                     const textColor = r * 0.299 + g * 0.587 + b * 0.114 > 186 ? "#000000" : "#ffffff";
                     return (
-                        <div className="flex flex-col gap-5">
+                        <div key={groupI} className="flex flex-col">
                             <h6
                                 style={{ background: group.color, color: textColor }}
                                 className="py-3 px-4 self-start rounded-md"
                             >
                                 {group.title}
                             </h6>
-                            <Droppable key={groupI} droppableId={`${groupI}`}>
+                            <Droppable droppableId={`${groupI}`}>
                                 {(provided, snapshot) => (
                                     <div
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
-                                        className="flex flex-col gap-5"
+                                        className="min-h-[100px] relative"
                                     >
                                         {group.tasks.map((task, taskI) => (
                                             <Draggable key={task.id} draggableId={task.id} index={taskI}>
@@ -79,11 +87,13 @@ export default function TasksBoard({ groups, setGroups }) {
                                                         ref={provided.innerRef}
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
-                                                        style={{
-                                                            borderColor: group.color,
-                                                            ...provided.draggableProps.style,
-                                                        }}
-                                                        className="bg-white border-l-4 p-4 rounded-md"
+                                                        style={getItemStyle(
+                                                            snapshot.isDragging,
+                                                            provided.draggableProps.style,
+                                                            snapshot.draggingOver,
+                                                            group.color
+                                                        )}
+                                                        className="bg-white border-l-4 p-4 rounded-md mt-4"
                                                     >
                                                         <p>{task.content}</p>
                                                     </div>

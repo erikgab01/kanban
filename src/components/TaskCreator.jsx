@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { nanoid } from "nanoid";
 
 export default function TaskCreator({ setGroups }) {
     const [taskName, setTaskName] = useState("");
     function addTask() {
         setGroups((oldGroups) => {
             let newGroups = JSON.parse(JSON.stringify(oldGroups));
-            newGroups[0].tasks.push(taskName);
+            newGroups[0].tasks.push({ id: nanoid(), content: taskName });
             return newGroups;
         });
         setTaskName("");

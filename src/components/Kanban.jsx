@@ -9,7 +9,7 @@ export default function Kanban() {
             title: "Бэклог",
             color: "#6A6E6B",
             tasks: [
-                { id: nanoid(), content: "Сделать домашку" },
+                { id: nanoid(), content: "Сделать домашку Сделать tretg gdg" },
                 { id: nanoid(), content: "Сделать домашку" },
             ],
         },

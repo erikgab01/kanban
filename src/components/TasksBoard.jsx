@@ -1,5 +1,5 @@
 import React from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { hexToRgb } from "../utility";
 import Task from "./Task";
 

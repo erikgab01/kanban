@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Move groups to context
 export default function Task({ task, taskI, groupI, color, groups, setGroups }) {
@@ -41,25 +42,34 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }) 
                         snapshot.draggingOver,
                         color
                     )}
-                    className="bg-white border-l-4 p-4 rounded-md mt-4"
+                    className="bg-white border-l-4 p-4 rounded-md mt-4 flex items-center gap-4"
                 >
                     {isEditing ? (
                         <textarea
-                            className="w-full resize-none overflow-hidden"
+                            className="w-full resize-none overflow-hidden outline-none bg-inherit border-b-2 border-blue-400"
                             value={task.content}
                             onChange={updateTask}
+                            rows="1"
                             ref={textareaRef}
                         />
                     ) : (
                         <textarea
-                            className="w-full resize-none overflow-hidden"
+                            className="w-full resize-none overflow-hidden bg-inherit pointer-events-none"
                             value={task.content}
                             disabled
+                            rows="1"
                             ref={textareaRef}
                         />
                     )}
-                    <button className="ml-4" onClick={() => setIsEditing(!isEditing)}>
-                        R
+                    <button
+                        className={
+                            isEditing
+                                ? "bg-blue-100 text-blue-400 rounded-md p-1 outline-none"
+                                : "bg-inherit p-1 outline-none"
+                        }
+                        onClick={() => setIsEditing(!isEditing)}
+                    >
+                        <FontAwesomeIcon icon="fa-solid fa-pen-to-square" />
                     </button>
                 </div>
             )}

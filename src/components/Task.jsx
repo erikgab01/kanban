@@ -49,6 +49,7 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }) 
                             className="w-full resize-none overflow-hidden outline-none bg-inherit border-b-2 border-blue-400"
                             value={task.content}
                             onChange={updateTask}
+                            onKeyDown={(e) => (e.key === "Enter" ? setIsEditing(!isEditing) : 0)}
                             rows="1"
                             ref={textareaRef}
                         />

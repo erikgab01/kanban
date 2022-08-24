@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Task({ task, taskI, groupI, color, groups, setGroups }) {
     const [isEditing, setIsEditing] = useState(false);
     const textareaRef = useRef(null);
+    // Autoresize textarea
     useEffect(() => {
         textareaRef.current.style.height = "0px";
         const scrollHeight = textareaRef.current.scrollHeight;

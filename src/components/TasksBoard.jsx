@@ -52,6 +52,13 @@ export default function TasksBoard({ groups, setGroups }) {
 
         return result;
     }
+    function clearTrashBin() {
+        setGroups((oldGroups) => {
+            const newGroups = JSON.parse(JSON.stringify(oldGroups));
+            newGroups[newGroups.length - 1].tasks = [];
+            return newGroups;
+        });
+    }
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <section className="flex gap-12 mt-8">
@@ -71,7 +78,7 @@ export default function TasksBoard({ groups, setGroups }) {
                                     <div
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
-                                        className="min-h-[100px] relative"
+                                        className="min-h-[70px] relative mb-4"
                                     >
                                         {group.tasks.map((task, taskI) => (
                                             <Task
@@ -87,6 +94,16 @@ export default function TasksBoard({ groups, setGroups }) {
                                     </div>
                                 )}
                             </Droppable>
+                            {group.isTrashBin && group.tasks.length !== 0 ? (
+                                <button
+                                    onClick={clearTrashBin}
+                                    className="bg-red-600 rounded-lg text-white py-3"
+                                >
+                                    Очистить
+                                </button>
+                            ) : (
+                                <></>
+                            )}
                         </div>
                     );
                 })}

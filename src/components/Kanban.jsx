@@ -22,7 +22,12 @@ export default function Kanban() {
             ],
         },
         { title: "Завершено", color: "#56BB62", tasks: [{ id: nanoid(), content: "Сделать домашку" }] },
-        { title: "Отложено", color: "#82569C", tasks: [{ id: nanoid(), content: "Сделать домашку" }] },
+        {
+            title: "Корзина",
+            color: "#E62E51",
+            tasks: [{ id: nanoid(), content: "Сделать домашку" }],
+            isTrashBin: true,
+        },
     ]);
 
     return (

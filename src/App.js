@@ -5,6 +5,7 @@ import KanbanPage from "./pages/KanbanPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
+import { AuthProvider } from "./Contexts/AuthContext";
 
 library.add(fas);
 
@@ -29,9 +30,9 @@ const router = createBrowserRouter([
 
 function App() {
     return (
-        <div className="App">
+        <AuthProvider>
             <RouterProvider router={router} />
-        </div>
+        </AuthProvider>
     );
 }
 

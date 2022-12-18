@@ -1,6 +1,25 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
+    const emailRef = useRef();
+    const passwordRef = useRef();
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    const { login } = useAuth();
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        try {
+            await login(emailRef.current.value, passwordRef.current.value);
+            navigate("/kanban/1");
+        } catch {
+            setError("Неправильный логин или пароль");
+        }
+    }
+
     return (
         <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-8">
@@ -9,7 +28,7 @@ export default function LoginForm() {
                         Войти в свой аккаунт
                     </h2>
                 </div>
-                <form className="mt-8 space-y-6">
+                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <input type="hidden" name="remember" value="true" />
                     <div className="-space-y-px rounded-md shadow-sm">
                         <div>
@@ -21,6 +40,7 @@ export default function LoginForm() {
                                 name="email"
                                 type="email"
                                 autocomplete="email"
+                                ref={emailRef}
                                 required
                                 className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
                                 placeholder="Почта"
@@ -35,6 +55,7 @@ export default function LoginForm() {
                                 name="password"
                                 type="password"
                                 autocomplete="current-password"
+                                ref={passwordRef}
                                 required
                                 className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
                                 placeholder="Пароль"
@@ -56,9 +77,9 @@ export default function LoginForm() {
                         </div>
 
                         <div className="text-sm">
-                            <a href="#" className="font-medium text-sky-600 hover:text-sky-500">
+                            <button className="font-medium text-sky-600 hover:text-sky-500">
                                 Забыли пароль?
-                            </a>
+                            </button>
                         </div>
                     </div>
 

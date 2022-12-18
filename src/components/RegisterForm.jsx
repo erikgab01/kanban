@@ -11,14 +11,14 @@ export default function RegisterForm() {
 
     const { signup } = useAuth();
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
         if (passwordRef.current.value !== passwordConfirmRef.current.value) {
             return setError("Пароли не совпадают");
         }
         try {
-            signup(emailRef.current.value, passwordRef.current.value);
+            await signup(emailRef.current.value, passwordRef.current.value);
             navigate("/kanban/1");
         } catch {
             setError("Ошибка при создании аккаунта");

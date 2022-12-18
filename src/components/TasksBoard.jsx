@@ -36,9 +36,7 @@ export default function TasksBoard({ groups, setGroups }) {
         return result;
     }
 
-    /**
-     * Moves an item from one list to another list.
-     */
+    // Moves an item from one list to another list.
     function move(source, destination, droppableSource, droppableDestination) {
         const sourceClone = Array.from(source);
         const destClone = Array.from(destination);

@@ -1,6 +1,30 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {
+    const emailRef = useRef();
+    const passwordRef = useRef();
+    const passwordConfirmRef = useRef();
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    const { signup } = useAuth();
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+            return setError("Пароли не совпадают");
+        }
+        try {
+            signup(emailRef.current.value, passwordRef.current.value);
+            navigate("/kanban/1");
+        } catch {
+            setError("Ошибка при создании аккаунта");
+        }
+    }
+
     return (
         <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-8">
@@ -9,7 +33,7 @@ export default function RegisterForm() {
                         Зарегистрировать аккаунт
                     </h2>
                 </div>
-                <form className="mt-8 space-y-6" action="#" method="POST">
+                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <input type="hidden" name="remember" value="true" />
                     <div className="-space-y-px rounded-md shadow-sm">
                         <div>
@@ -34,6 +58,7 @@ export default function RegisterForm() {
                                 name="email"
                                 type="email"
                                 autocomplete="email"
+                                ref={emailRef}
                                 required
                                 className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
                                 placeholder="Почта"
@@ -47,6 +72,7 @@ export default function RegisterForm() {
                                 id="password"
                                 name="password"
                                 type="password"
+                                ref={passwordRef}
                                 required
                                 className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
                                 placeholder="Пароль"
@@ -60,6 +86,7 @@ export default function RegisterForm() {
                                 id="password-confirmation"
                                 name="password-confirmation"
                                 type="password"
+                                ref={passwordConfirmRef}
                                 required
                                 className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
                                 placeholder="Подтвердите пароль"

@@ -9,6 +9,7 @@ import { AuthProvider } from "./Contexts/AuthContext";
 
 library.add(fas);
 
+//TODO: private routes for authorized users
 const router = createBrowserRouter([
     {
         path: "/",

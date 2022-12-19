@@ -13,12 +13,15 @@ export function useAuth() {
     return useContext(AuthContext);
 }
 
+//TODO: Google auth option
 export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
+            setLoading(false);
         });
         return unsubscribe;
     }, []);
@@ -42,5 +45,5 @@ export function AuthProvider({ children }) {
         logout,
     };
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 }

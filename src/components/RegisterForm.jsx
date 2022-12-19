@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-// TODO: error handling, assign name to an account
+// TODO: assign name to an account
 export default function RegisterForm() {
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -36,6 +36,14 @@ export default function RegisterForm() {
                         Зарегистрировать аккаунт
                     </h2>
                 </div>
+                {error && (
+                    <div
+                        class="p-4 mb-4 text-red-700 bg-red-100 rounded-lg sm:text-sm dark:bg-red-200 dark:text-red-800"
+                        role="alert"
+                    >
+                        <span class="font-medium">{error}</span>
+                    </div>
+                )}
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <input type="hidden" name="remember" value="true" />
                     <div className="-space-y-px rounded-md shadow-sm">

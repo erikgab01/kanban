@@ -2,8 +2,8 @@ import React, { useRef, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-// TODO: assign name to an account
 export default function RegisterForm() {
+    const usernameRef = useRef();
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
@@ -11,7 +11,7 @@ export default function RegisterForm() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const { signup } = useAuth();
+    const { signup, updateProfileName } = useAuth();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -21,6 +21,7 @@ export default function RegisterForm() {
         setLoading(true);
         try {
             await signup(emailRef.current.value, passwordRef.current.value);
+            await updateProfileName(usernameRef.current.value);
             navigate("/kanban/1");
         } catch {
             setError("Ошибка при создании аккаунта");
@@ -55,6 +56,7 @@ export default function RegisterForm() {
                                 id="username"
                                 name="username"
                                 type="text"
+                                ref={usernameRef}
                                 required
                                 className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
                                 placeholder="Имя пользователя"

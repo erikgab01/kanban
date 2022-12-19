@@ -5,6 +5,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
+    updateProfile,
 } from "firebase/auth";
 
 const AuthContext = React.createContext();
@@ -38,11 +39,18 @@ export function AuthProvider({ children }) {
         signOut(auth);
     }
 
+    function updateProfileName(name) {
+        return updateProfile(auth.currentUser, {
+            displayName: name,
+        });
+    }
+
     const value = {
         currentUser,
         signup,
         login,
         logout,
+        updateProfileName,
     };
 
     return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;

@@ -15,7 +15,7 @@ export default function Header() {
                 <h1 className="text-2xl font-medium">Канбан-доска</h1>
                 {currentUser && (
                     <div>
-                        {currentUser.email}
+                        {currentUser.displayName}
                         <button onClick={signOut}>Выйти</button>
                     </div>
                 )}

@@ -48,7 +48,7 @@ export default function RegisterForm() {
                     <input type="hidden" name="remember" value="true" />
                     <div className="-space-y-px rounded-md shadow-sm">
                         <div>
-                            <label for="username" className="sr-only">
+                            <label htmlFor="username" className="sr-only">
                                 Имя пользователя
                             </label>
                             <input
@@ -61,14 +61,14 @@ export default function RegisterForm() {
                             />
                         </div>
                         <div>
-                            <label for="email-address" className="sr-only">
+                            <label htmlFor="email-address" className="sr-only">
                                 Почта
                             </label>
                             <input
                                 id="email-address"
                                 name="email"
                                 type="email"
-                                autocomplete="email"
+                                autoComplete="email"
                                 ref={emailRef}
                                 required
                                 className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
@@ -76,7 +76,7 @@ export default function RegisterForm() {
                             />
                         </div>
                         <div>
-                            <label for="password" className="sr-only">
+                            <label htmlFor="password" className="sr-only">
                                 Пароль
                             </label>
                             <input
@@ -90,7 +90,7 @@ export default function RegisterForm() {
                             />
                         </div>
                         <div>
-                            <label for="password-confirmation" className="sr-only">
+                            <label htmlFor="password-confirmation" className="sr-only">
                                 Подтвердите пароль
                             </label>
                             <input
@@ -120,9 +120,9 @@ export default function RegisterForm() {
                                     aria-hidden="true"
                                 >
                                     <path
-                                        fill-rule="evenodd"
+                                        fillRule="evenodd"
                                         d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
-                                        clip-rule="evenodd"
+                                        clipRule="evenodd"
                                     />
                                 </svg>
                             </span>

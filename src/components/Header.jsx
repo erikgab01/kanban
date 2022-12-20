@@ -11,12 +11,14 @@ export default function Header() {
     }
     return (
         <nav className="text-white bg-sky-600 py-4">
-            <div className="container mx-auto">
+            <div className="container mx-auto flex items-center justify-between">
                 <h1 className="text-2xl font-medium">Канбан-доска</h1>
                 {currentUser && (
                     <div>
-                        {currentUser.displayName}
-                        <button onClick={signOut}>Выйти</button>
+                        Добро пожаловать, {currentUser.displayName}
+                        <button className="ml-4" onClick={signOut}>
+                            Выйти
+                        </button>
                     </div>
                 )}
             </div>

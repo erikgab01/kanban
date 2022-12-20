@@ -23,8 +23,11 @@ export default function RegisterForm() {
             await signup(emailRef.current.value, passwordRef.current.value);
             await updateProfileName(usernameRef.current.value);
             navigate("/kanban/1");
-        } catch {
-            setError("Ошибка при создании аккаунта");
+        } catch (error) {
+            let errorCode = error.code;
+            if (errorCode === "auth/weak-password") setError("Пароль слишком короткий. Минимум 6 символов");
+            else if (errorCode === "auth/email-already-in-use") setError("Почта уже используется");
+            else setError("Ошибка при создании аккаунта");
         }
         setLoading(false);
     }

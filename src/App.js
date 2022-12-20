@@ -6,10 +6,10 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import { AuthProvider } from "./Contexts/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
 
 library.add(fas);
 
-//TODO: private routes for authorized users
 const router = createBrowserRouter([
     {
         path: "/",
@@ -17,7 +17,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/kanban/:kanbanId",
-        element: <KanbanPage />,
+        element: (
+            <PrivateRoute>
+                <KanbanPage />
+            </PrivateRoute>
+        ),
     },
     {
         path: "/login",

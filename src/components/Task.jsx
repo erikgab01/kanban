@@ -12,7 +12,7 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }) 
         textareaRef.current.style.height = "0px";
         const scrollHeight = textareaRef.current.scrollHeight;
         textareaRef.current.style.height = scrollHeight + "px";
-        console.log(textareaRef);
+        //console.log(textareaRef);
     }, [task.content]);
 
     const getItemStyle = (isDragging, draggableStyle, draggingOver, defaultColor) => ({

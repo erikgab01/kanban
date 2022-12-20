@@ -5,8 +5,8 @@ import { useAuth } from "./../Contexts/AuthContext";
 export default function Header() {
     const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
-    function signOut() {
-        logout();
+    async function signOut() {
+        await logout();
         navigate("/");
     }
     return (

@@ -19,6 +19,8 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState();
     const [loading, setLoading] = useState(true);
 
+    // Observer is called after the redirect, so user ends up in the login page again
+    // Observer can be used to handle initial loading
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
@@ -36,7 +38,7 @@ export function AuthProvider({ children }) {
     }
 
     function logout() {
-        signOut(auth);
+        return signOut(auth);
     }
 
     function updateProfileName(name) {

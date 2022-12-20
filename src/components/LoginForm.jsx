@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // TODO: forget password, remember me
 export default function LoginForm() {
@@ -9,6 +9,8 @@ export default function LoginForm() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
     const { login } = useAuth();
 
@@ -17,7 +19,7 @@ export default function LoginForm() {
         setLoading(true);
         try {
             await login(emailRef.current.value, passwordRef.current.value);
-            navigate("/kanban/1");
+            navigate(from, { replace: true });
         } catch {
             setError("Неправильный логин или пароль");
         }

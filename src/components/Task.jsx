@@ -31,7 +31,7 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }) 
         });
     };
     return (
-        <Draggable key={task.id} draggableId={task.id} index={taskI}>
+        <Draggable draggableId={task.id} index={taskI}>
             {(provided, snapshot) => (
                 <div
                     ref={provided.innerRef}

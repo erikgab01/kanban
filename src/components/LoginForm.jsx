@@ -37,10 +37,10 @@ export default function LoginForm() {
                 </div>
                 {error && (
                     <div
-                        class="p-4 text-red-700 bg-red-100 rounded-lg sm:text-sm dark:bg-red-200 dark:text-red-800"
+                        className="p-4 text-red-700 bg-red-100 rounded-lg sm:text-sm dark:bg-red-200 dark:text-red-800"
                         role="alert"
                     >
-                        <span class="font-medium">{error}</span>
+                        <span className="font-medium">{error}</span>
                     </div>
                 )}
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -139,7 +139,7 @@ export default function LoginForm() {
                                             fill="currentFill"
                                         />
                                     </svg>
-                                    <span class="sr-only">Loading...</span>
+                                    <span className="sr-only">Loading...</span>
                                 </span>
                             )}
                         </button>

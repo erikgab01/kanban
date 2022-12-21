@@ -80,6 +80,7 @@ export default function TasksBoard({ groups, setGroups }) {
                                     >
                                         {group.tasks.map((task, taskI) => (
                                             <Task
+                                                key={task.id}
                                                 task={task}
                                                 taskI={taskI}
                                                 groupI={groupI}

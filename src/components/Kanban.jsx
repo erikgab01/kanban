@@ -7,7 +7,7 @@ import { db, auth } from "./../firebase";
 
 export default function Kanban() {
     const [groups, setGroups] = useState([]);
-
+    //TODO: add loading, debounce
     //Read from db
     useEffect(() => {
         (async () => {

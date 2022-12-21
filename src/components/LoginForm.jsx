@@ -2,10 +2,11 @@ import React, { useRef, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 
-// TODO: forget password, remember me
+// TODO: forget password
 export default function LoginForm() {
     const emailRef = useRef();
     const passwordRef = useRef();
+    const remember = useRef();
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function LoginForm() {
         e.preventDefault();
         setLoading(true);
         try {
-            await login(emailRef.current.value, passwordRef.current.value);
+            await login(emailRef.current.value, passwordRef.current.value, remember.current.checked);
             navigate(from, { replace: true });
         } catch {
             setError("Неправильный логин или пароль");
@@ -83,6 +84,7 @@ export default function LoginForm() {
                                 id="remember-me"
                                 name="remember-me"
                                 type="checkbox"
+                                ref={remember}
                                 className="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-600"
                             />
                             <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">

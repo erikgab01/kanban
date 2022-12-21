@@ -6,6 +6,9 @@ import {
     signInWithEmailAndPassword,
     signOut,
     updateProfile,
+    setPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence,
 } from "firebase/auth";
 
 const AuthContext = React.createContext();
@@ -33,8 +36,14 @@ export function AuthProvider({ children }) {
         return createUserWithEmailAndPassword(auth, email, password);
     }
 
-    function login(email, password) {
-        return signInWithEmailAndPassword(auth, email, password);
+    async function login(email, password, remember = false) {
+        if (remember) {
+            await setPersistence(auth, browserLocalPersistence);
+            return signInWithEmailAndPassword(auth, email, password);
+        } else {
+            await setPersistence(auth, browserSessionPersistence);
+            return signInWithEmailAndPassword(auth, email, password);
+        }
     }
 
     function logout() {

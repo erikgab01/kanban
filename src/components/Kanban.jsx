@@ -4,10 +4,12 @@ import TaskCreator from "./TaskCreator";
 import TasksBoard from "./TasksBoard";
 import { setDoc, getDoc, doc } from "firebase/firestore";
 import { db, auth } from "./../firebase";
+import useDebounce from "../hooks/useDebounce";
 
 export default function Kanban() {
     const [groups, setGroups] = useState([]);
-    //TODO: add loading, debounce
+    const debouncedGroups = useDebounce(groups, 2000);
+    //TODO: add loading
     //Read from db
     useEffect(() => {
         (async () => {
@@ -49,11 +51,11 @@ export default function Kanban() {
 
     // Write to db
     useEffect(() => {
-        if (groups.length > 0) {
+        if (debouncedGroups.length > 0) {
             (async () => {
                 try {
                     await setDoc(doc(db, "kanbans", auth.currentUser.uid), {
-                        kanban: JSON.stringify(groups),
+                        kanban: JSON.stringify(debouncedGroups),
                     });
                     console.log("Document saved");
                 } catch (error) {
@@ -61,7 +63,7 @@ export default function Kanban() {
                 }
             })();
         }
-    }, [groups]);
+    }, [debouncedGroups]);
 
     return (
         <div className="container mx-auto">

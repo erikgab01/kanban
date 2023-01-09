@@ -13,6 +13,8 @@ export default function Kanban() {
 
     const { kanbanId } = useParams();
 
+    //TODO: improve design, make separators for columns in kanban
+
     //Read from db
     useEffect(() => {
         (async () => {

@@ -22,7 +22,7 @@ export default function RegisterForm() {
         try {
             await signup(emailRef.current.value, passwordRef.current.value);
             await updateProfileName(usernameRef.current.value);
-            navigate("/kanban/1");
+            navigate("/");
         } catch (error) {
             if (error.code === "auth/weak-password") setError("Пароль слишком короткий. Минимум 6 символов");
             else if (error.code === "auth/email-already-in-use") setError("Почта уже используется");

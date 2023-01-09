@@ -3,13 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "./utility/Modal";
 import { useRef } from "react";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { db, auth } from "./../firebase";
 import { useEffect } from "react";
 import kanban_setup from "./../kanban_setup";
 
 export default function Dashboard() {
     // TODO: loading
+    // TODO: filter kanbans by user, only host can access his kanban
     const [isShow, setIsShow] = useState(false);
     const [kanbanList, setKanbanList] = useState([]);
     const titleRef = useRef(null);
@@ -30,7 +31,9 @@ export default function Dashboard() {
 
     useEffect(() => {
         (async () => {
-            const querySnapshot = await getDocs(collection(db, "kanbans"));
+            //const querySnapshot = await getDocs(collection(db, "kanbans"));
+            const q = query(collection(db, "kanbans"), where("host", "==", auth.currentUser.uid));
+            const querySnapshot = await getDocs(q);
             setKanbanList(querySnapshot.docs);
         })();
     }, []);

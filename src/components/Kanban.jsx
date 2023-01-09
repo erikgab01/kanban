@@ -2,21 +2,24 @@ import { nanoid } from "nanoid";
 import React, { useState, useEffect } from "react";
 import TaskCreator from "./TaskCreator";
 import TasksBoard from "./TasksBoard";
-import { setDoc, getDoc, doc } from "firebase/firestore";
-import { db, auth } from "./../firebase";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
+import { db } from "./../firebase";
 import useDebounce from "../hooks/useDebounce";
+import { useParams } from "react-router-dom";
 
 export default function Kanban() {
     const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(true);
-    const debouncedGroups = useDebounce(groups, 2000);
+    const debouncedGroups = useDebounce(groups, 1000);
+
+    const { kanbanId } = useParams();
 
     //Read from db
     useEffect(() => {
         (async () => {
             try {
-                const docSnap = await getDoc(doc(db, "kanbans", auth.currentUser.uid));
-                if (docSnap.exists()) {
+                const docSnap = await getDoc(doc(db, "kanbans", kanbanId));
+                if (docSnap.exists() && docSnap.data().kanban.length) {
                     setGroups(JSON.parse(docSnap.data().kanban));
                 } else {
                     // Default setup for new users
@@ -49,14 +52,15 @@ export default function Kanban() {
                 console.error("Error reading a document: ", error);
             }
         })();
-    }, []);
+    }, [kanbanId]);
 
     // Write to db
     useEffect(() => {
         if (debouncedGroups.length > 0) {
             (async () => {
                 try {
-                    await setDoc(doc(db, "kanbans", auth.currentUser.uid), {
+                    const kanbanRef = doc(db, "kanbans", kanbanId);
+                    await updateDoc(kanbanRef, {
                         kanban: JSON.stringify(debouncedGroups),
                     });
                     console.log("Document saved");
@@ -65,7 +69,7 @@ export default function Kanban() {
                 }
             })();
         }
-    }, [debouncedGroups]);
+    }, [debouncedGroups, kanbanId]);
 
     return loading ? (
         <div class="text-center mt-40">

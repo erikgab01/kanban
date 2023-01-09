@@ -1,28 +1,60 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "./utility/Modal";
+import { useRef } from "react";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import { db, auth } from "./../firebase";
+import { useEffect } from "react";
 
 export default function Dashboard() {
+    // TODO: loading
     const [isShow, setIsShow] = useState(false);
+    const [kanbanList, setKanbanList] = useState([]);
+    const titleRef = useRef(null);
+    const descRef = useRef(null);
+    const navigate = useNavigate();
+
+    async function createKanban(e) {
+        e.preventDefault();
+        const kanbanRef = await addDoc(collection(db, "kanbans"), {
+            name: titleRef.current.value,
+            description: descRef.current.value,
+            host: auth.currentUser.uid,
+            kanban: [],
+        });
+        console.log("Document written with ID: ", kanbanRef.id);
+        navigate(`/kanban/${kanbanRef.id}`);
+    }
+
+    useEffect(() => {
+        (async () => {
+            const querySnapshot = await getDocs(collection(db, "kanbans"));
+            setKanbanList(querySnapshot.docs);
+        })();
+    }, []);
+
     return (
         <div className="flex flex-col gap-4 min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <h1 className="font-medium text-lg text-center">Добро пожаловать</h1>
             <div className="grid gap-4 grid-cols-3">
-                <Link
-                    to={"/kanban/1"}
-                    class="w-60 h-28 p-6 text-center bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                >
-                    <h5 class="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
-                        Kanban name
-                    </h5>
-                    <p class="font-normal truncate text-sm text-gray-700 dark:text-gray-400">
-                        Kanban description
-                    </p>
-                </Link>
+                {kanbanList.map((kanban) => (
+                    <Link
+                        key={kanban.id}
+                        to={`/kanban/${kanban.id}`}
+                        className="w-60 h-28 p-6 text-center bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                    >
+                        <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
+                            {kanban.data().name}
+                        </h5>
+                        <p className="font-normal truncate text-sm text-gray-700 dark:text-gray-400">
+                            {kanban.data().description}
+                        </p>
+                    </Link>
+                ))}
 
                 <button
-                    class="w-60 h-28 p-6 text-2xl bg-white border border-dashed border-gray-600 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                    className="w-60 h-28 p-6 text-2xl bg-white border border-dashed border-gray-600 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                     onClick={() => setIsShow(true)}
                 >
                     <FontAwesomeIcon icon="fa-solid fa-plus" />
@@ -32,7 +64,7 @@ export default function Dashboard() {
                         <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">
                             Создание новой доски
                         </h3>
-                        <form className="space-y-6" action="#">
+                        <form className="space-y-6" onSubmit={createKanban}>
                             <div>
                                 <label
                                     htmlFor="title"
@@ -46,6 +78,7 @@ export default function Dashboard() {
                                     id="title"
                                     className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
                                     placeholder="Моя доска"
+                                    ref={titleRef}
                                     required
                                 />
                             </div>
@@ -60,15 +93,16 @@ export default function Dashboard() {
                                     type="text"
                                     name="description"
                                     id="description"
-                                    placeholder="Для работы над проектом"
                                     className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
+                                    placeholder="Для работы над проектом"
+                                    ref={descRef}
                                     required
                                 />
                             </div>
 
                             <button
                                 type="submit"
-                                className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                className="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                             >
                                 Создать
                             </button>

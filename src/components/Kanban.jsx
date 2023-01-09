@@ -72,10 +72,10 @@ export default function Kanban() {
     }, [debouncedGroups, kanbanId]);
 
     return loading ? (
-        <div class="text-center mt-40">
+        <div className="text-center mt-40">
             <div role="status">
                 <svg
-                    class="inline w-16 h-16 text-gray-400 animate-spin fill-blue-600"
+                    className="inline w-16 h-16 text-gray-400 animate-spin fill-blue-600"
                     viewBox="0 0 100 101"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +89,7 @@ export default function Kanban() {
                         fill="currentFill"
                     />
                 </svg>
-                <span class="sr-only">Loading...</span>
+                <span className="sr-only">Loading...</span>
             </div>
         </div>
     ) : (

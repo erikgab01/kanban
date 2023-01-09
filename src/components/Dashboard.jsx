@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db, auth } from "./../firebase";
 import { useEffect } from "react";
+import kanban_setup from "./../kanban_setup";
 
 export default function Dashboard() {
     // TODO: loading
@@ -21,7 +22,7 @@ export default function Dashboard() {
             name: titleRef.current.value,
             description: descRef.current.value,
             host: auth.currentUser.uid,
-            kanban: [],
+            kanban: JSON.stringify(kanban_setup),
         });
         console.log("Document written with ID: ", kanbanRef.id);
         navigate(`/kanban/${kanbanRef.id}`);

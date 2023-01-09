@@ -1,8 +1,7 @@
-import { nanoid } from "nanoid";
 import React, { useState, useEffect } from "react";
 import TaskCreator from "./TaskCreator";
 import TasksBoard from "./TasksBoard";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, onSnapshot } from "firebase/firestore";
 import { db } from "./../firebase";
 import useDebounce from "../hooks/useDebounce";
 import { useParams } from "react-router-dom";
@@ -19,35 +18,10 @@ export default function Kanban() {
         (async () => {
             try {
                 const docSnap = await getDoc(doc(db, "kanbans", kanbanId));
-                if (docSnap.exists() && docSnap.data().kanban.length) {
+                if (docSnap.exists()) {
                     setGroups(JSON.parse(docSnap.data().kanban));
-                } else {
-                    // Default setup for new users
-                    setGroups([
-                        {
-                            title: "Бэклог",
-                            color: "#6A6E6B",
-                            tasks: [{ id: nanoid(), content: "Задача" }],
-                        },
-                        {
-                            title: "В процессе",
-                            color: "#EB6B50",
-                            tasks: [],
-                        },
-                        {
-                            title: "Завершено",
-                            color: "#56BB62",
-                            tasks: [],
-                        },
-                        {
-                            title: "Корзина",
-                            color: "#E62E51",
-                            tasks: [],
-                            isTrashBin: true,
-                        },
-                    ]);
+                    setLoading(false);
                 }
-                setLoading(false);
             } catch (error) {
                 console.error("Error reading a document: ", error);
             }
@@ -70,6 +44,15 @@ export default function Kanban() {
             })();
         }
     }, [debouncedGroups, kanbanId]);
+
+    // Realtime listening to db changes
+    useEffect(() => {
+        const unsub = onSnapshot(doc(db, "kanbans", kanbanId), (doc) => {
+            console.log("Current data: ", doc.data());
+            setGroups(JSON.parse(doc.data().kanban));
+        });
+        return unsub;
+    }, [kanbanId]);
 
     return loading ? (
         <div className="text-center mt-40">

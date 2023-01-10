@@ -44,6 +44,7 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }) 
                         color
                     )}
                     className="bg-white border-l-4 p-4 rounded-md mt-4 flex items-center gap-4"
+                    onDoubleClick={() => setIsEditing(true)}
                 >
                     {isEditing ? (
                         <textarea

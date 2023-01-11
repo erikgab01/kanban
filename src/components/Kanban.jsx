@@ -5,6 +5,7 @@ import { getDoc, doc, updateDoc, onSnapshot } from "firebase/firestore";
 import { db } from "./../firebase";
 import useDebounce from "../hooks/useDebounce";
 import { useParams } from "react-router-dom";
+import InviteMenu from "./InviteMenu";
 
 export default function Kanban() {
     const [groups, setGroups] = useState([]);
@@ -79,7 +80,10 @@ export default function Kanban() {
         </div>
     ) : (
         <div className="container mx-auto">
-            <TaskCreator setGroups={setGroups} />
+            <div className="flex gap-8">
+                <TaskCreator setGroups={setGroups} />
+                <InviteMenu kanbanId={kanbanId} />
+            </div>
             <TasksBoard groups={groups} setGroups={setGroups} />
         </div>
     );

@@ -22,6 +22,7 @@ export default function Dashboard() {
             name: titleRef.current.value,
             description: descRef.current.value,
             host: auth.currentUser.uid,
+            collaborators: [],
             kanban: JSON.stringify(kanban_setup),
         });
         console.log("Document written with ID: ", kanbanRef.id);

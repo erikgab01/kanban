@@ -64,7 +64,7 @@ export default function TasksBoard({ groups, setGroups }) {
                     const { r, g, b } = hexToRgb(group.color);
                     const textColor = r * 0.299 + g * 0.587 + b * 0.114 > 186 ? "#000000" : "#ffffff";
                     return (
-                        <div key={groupI} className="flex flex-col max-w-md">
+                        <div key={groupI} className="flex flex-col min-w-[240px]">
                             <h6
                                 style={{ background: group.color, color: textColor }}
                                 className="py-3 px-4 self-start rounded-md"

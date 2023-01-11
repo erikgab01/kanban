@@ -10,7 +10,6 @@ import kanban_setup from "./../kanban_setup";
 
 export default function Dashboard() {
     // TODO: loading
-    // TODO: filter kanbans by user, only host can access his kanban
     const [isShow, setIsShow] = useState(false);
     const [kanbanList, setKanbanList] = useState([]);
     const titleRef = useRef(null);

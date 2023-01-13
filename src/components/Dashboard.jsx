@@ -3,19 +3,23 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "./utility/Modal";
 import { useRef } from "react";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, query, where } from "firebase/firestore";
 import { db, auth } from "./../firebase";
 import { useEffect } from "react";
 import kanban_setup from "./../kanban_setup";
+import useContextMenu from "./../hooks/useContextMenu";
+import ContextMenu from "./utility/ContextMenu";
 
 export default function Dashboard() {
-    // TODO: loading, delete kanbans
+    // TODO: loading, delete/edit kanbans
     // TODO: display collaborators kanbans
     const [isShow, setIsShow] = useState(false);
     const [kanbanList, setKanbanList] = useState([]);
     const titleRef = useRef(null);
     const descRef = useRef(null);
     const navigate = useNavigate();
+
+    const { clicked, setClicked, points, setPoints, target, setTarget } = useContextMenu();
 
     async function createKanban(e) {
         e.preventDefault();
@@ -30,13 +34,13 @@ export default function Dashboard() {
         navigate(`/kanban/${kanbanRef.id}`);
     }
 
+    // Realtime listening to db changes
     useEffect(() => {
-        (async () => {
-            //const querySnapshot = await getDocs(collection(db, "kanbans"));
-            const q = query(collection(db, "kanbans"), where("host", "==", auth.currentUser.uid));
-            const querySnapshot = await getDocs(q);
+        const q = query(collection(db, "kanbans"), where("host", "==", auth.currentUser.uid));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
             setKanbanList(querySnapshot.docs);
-        })();
+        });
+        return unsubscribe;
     }, []);
 
     return (
@@ -48,6 +52,15 @@ export default function Dashboard() {
                         key={kanban.id}
                         to={`/kanban/${kanban.id}`}
                         className="w-60 h-28 p-6 text-center bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                        onContextMenu={(e) => {
+                            e.preventDefault();
+                            setClicked(true);
+                            setPoints({
+                                x: e.pageX,
+                                y: e.pageY,
+                            });
+                            setTarget(kanban.id);
+                        }}
                     >
                         <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
                             {kanban.data().name}
@@ -115,6 +128,7 @@ export default function Dashboard() {
                     </div>
                 </Modal>
             </div>
+            {clicked && <ContextMenu top={points.y} left={points.x} target={target} />}
         </div>
     );
 }

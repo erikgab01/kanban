@@ -3,6 +3,7 @@ import { getDoc, getDocs, doc, updateDoc, query, collection, where, arrayUnion }
 import { db } from "./../firebase";
 
 export default function InviteMenu({ kanbanId }) {
+    // TODO: display errors and success messages
     const [email, setEmail] = useState("");
     async function inviteUser(e) {
         e.preventDefault();

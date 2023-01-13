@@ -17,8 +17,12 @@ export default function PrivateRoute({ children }) {
     // Check if user is a host/member of this kanban
     // Need a better implementation of this
     const docRef = doc(db, "kanbans", kanbanId);
+    // TODO: if user is a collaborator, allow him to visit kanban
     getDoc(docRef).then((doc) => {
-        if (doc.data().host !== auth.currentUser.uid) {
+        if (
+            doc.data().host !== auth.currentUser.uid &&
+            !doc.data().collaborators.includes(auth.currentUser.uid)
+        ) {
             setIsAllowed(false);
         }
     });

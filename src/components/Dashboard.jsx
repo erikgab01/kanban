@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import kanban_setup from "./../kanban_setup";
 
 export default function Dashboard() {
-    // TODO: loading
+    // TODO: loading, delete kanbans
     const [isShow, setIsShow] = useState(false);
     const [kanbanList, setKanbanList] = useState([]);
     const titleRef = useRef(null);

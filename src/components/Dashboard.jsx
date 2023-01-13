@@ -16,7 +16,8 @@ export default function Dashboard() {
     // TODO: decompose to multiple ui components
     const [isShowCreateModal, setIsShowCreateModal] = useState(false);
     const [isShowConfirmationModal, setIsShowConfirmationModal] = useState(false);
-    const [kanbanList, setKanbanList] = useState([]);
+    const [kanbanHostList, setKanbanHostList] = useState([]);
+    const [kanbanCollabList, setKanbanCollabList] = useState([]);
     const titleRef = useRef(null);
     const descRef = useRef(null);
     const navigate = useNavigate();
@@ -42,18 +43,29 @@ export default function Dashboard() {
 
     // Realtime listening to db changes
     useEffect(() => {
-        const q = query(collection(db, "kanbans"), where("host", "==", auth.currentUser.uid));
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            setKanbanList(querySnapshot.docs);
+        const q1 = query(collection(db, "kanbans"), where("host", "==", auth.currentUser.uid));
+        const q2 = query(
+            collection(db, "kanbans"),
+            where("collaborators", "array-contains", auth.currentUser.uid)
+        );
+        const unsubscribe1 = onSnapshot(q1, (querySnapshot) => {
+            setKanbanHostList(querySnapshot.docs);
         });
-        return unsubscribe;
+        const unsubscribe2 = onSnapshot(q2, (querySnapshot) => {
+            setKanbanCollabList(querySnapshot.docs);
+        });
+        return () => {
+            unsubscribe1();
+            unsubscribe2();
+        };
     }, []);
 
     return (
         <div className="flex flex-col gap-4 min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <h1 className="font-medium text-lg text-center">Добро пожаловать</h1>
+            <h4 className="font-medium text-center">Ваши доски</h4>
             <div className="grid gap-4 grid-cols-3">
-                {kanbanList.map((kanban) => (
+                {kanbanHostList.map((kanban) => (
                     <Link
                         key={kanban.id}
                         to={`/kanban/${kanban.id}`}
@@ -83,6 +95,26 @@ export default function Dashboard() {
                 >
                     <FontAwesomeIcon icon="fa-solid fa-plus" />
                 </button>
+            </div>
+            <h4 className="font-medium text-cente mt-5">Доски, к которым вам дали доступ</h4>
+            {kanbanCollabList.length === 0 && (
+                <p>Попросите владельца доски дать вам доступ, после этого вы увидите её тут</p>
+            )}
+            <div className="grid gap-4 grid-cols-3">
+                {kanbanCollabList.map((kanban) => (
+                    <Link
+                        key={kanban.id}
+                        to={`/kanban/${kanban.id}`}
+                        className="w-60 h-28 p-6 text-center bg-white border border-yellow-400 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                    >
+                        <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
+                            {kanban.data().name}
+                        </h5>
+                        <p className="font-normal truncate text-sm text-gray-700 dark:text-gray-400">
+                            {kanban.data().description}
+                        </p>
+                    </Link>
+                ))}
             </div>
             {/* Create new kanban modal */}
             <Modal isShow={isShowCreateModal} setIsShow={setIsShowCreateModal}>

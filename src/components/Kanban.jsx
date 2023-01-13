@@ -16,6 +16,7 @@ export default function Kanban() {
     const { kanbanId } = useParams();
 
     //TODO: improve design, make separators for columns in kanban, a tick to move to "done", rename columns
+    //TODO: delete collaborators
 
     //Read from db
     useEffect(() => {

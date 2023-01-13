@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { getDoc, getDocs, doc, updateDoc, query, collection, where, arrayUnion } from "firebase/firestore";
-import { db } from "./../firebase";
+import { db, auth } from "./../firebase";
 
 export default function InviteMenu({ kanbanId }) {
     // TODO: display errors and success messages
@@ -17,14 +17,20 @@ export default function InviteMenu({ kanbanId }) {
             const newUser = userRef.docs[0];
             const kanbanRef = doc(db, "kanbans", kanbanId);
             const kanban = await getDoc(kanbanRef);
+            const isHost = kanban.data().host === auth.currentUser.uid;
             const invitedUserIsHost = kanban.data().host === newUser.data().user_id;
             const invitedUserIsAlreadyCollaborator = kanban
                 .data()
                 .collaborators.includes(newUser.data().user_id);
+            if (!isHost) {
+                console.log("You are not a host");
+                return;
+            }
             if (invitedUserIsHost || invitedUserIsAlreadyCollaborator) {
                 console.log("User is already invited to this kanban");
                 return;
             }
+
             await updateDoc(kanbanRef, {
                 collaborators: arrayUnion(newUser.data().user_id),
             });

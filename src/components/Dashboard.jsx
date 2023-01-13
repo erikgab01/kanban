@@ -10,6 +10,7 @@ import kanban_setup from "./../kanban_setup";
 
 export default function Dashboard() {
     // TODO: loading, delete kanbans
+    // TODO: display collaborators kanbans
     const [isShow, setIsShow] = useState(false);
     const [kanbanList, setKanbanList] = useState([]);
     const titleRef = useRef(null);

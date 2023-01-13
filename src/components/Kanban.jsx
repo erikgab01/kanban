@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TaskCreator from "./TaskCreator";
 import TasksBoard from "./TasksBoard";
 import { getDoc, doc, updateDoc, onSnapshot } from "firebase/firestore";
-import { db } from "./../firebase";
+import { db, auth } from "./../firebase";
 import useDebounce from "../hooks/useDebounce";
 import { useParams } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
@@ -10,6 +10,7 @@ import InviteMenu from "./InviteMenu";
 export default function Kanban() {
     const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isHost, setIsHost] = useState(false);
     const debouncedGroups = useDebounce(groups, 1000);
 
     const { kanbanId } = useParams();
@@ -23,6 +24,7 @@ export default function Kanban() {
                 const docSnap = await getDoc(doc(db, "kanbans", kanbanId));
                 if (docSnap.exists()) {
                     setGroups(JSON.parse(docSnap.data().kanban));
+                    setIsHost(JSON.parse(docSnap.data().host === auth.currentUser.uid));
                     setLoading(false);
                 }
             } catch (error) {
@@ -82,7 +84,7 @@ export default function Kanban() {
         <div className="container mx-auto">
             <div className="flex gap-8">
                 <TaskCreator setGroups={setGroups} />
-                <InviteMenu kanbanId={kanbanId} />
+                {isHost && <InviteMenu kanbanId={kanbanId} />}
             </div>
             <TasksBoard groups={groups} setGroups={setGroups} />
         </div>

@@ -1,27 +1,28 @@
 import { DeleteConfirmation } from "./DeleteConfirmation";
-import { CreateNewKanbanForm } from "./CreateNewKanbanForm";
+import { KanbanForm } from "./KanbanForm";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "./utility/Modal";
-import { collection, addDoc, onSnapshot, query, where, doc, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, query, where, deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { db, auth } from "./../firebase";
 import kanban_setup from "./../kanban_setup";
 import useContextMenu from "./../hooks/useContextMenu";
 import ContextMenu from "./utility/ContextMenu";
 
 export default function Dashboard() {
-    // TODO: loading, delete/edit kanbans
+    // TODO: loading
     const [isShowCreateModal, setIsShowCreateModal] = useState(false);
+    const [isShowEditModal, setIsShowEditModal] = useState(false);
     const [isShowConfirmationModal, setIsShowConfirmationModal] = useState(false);
     const [kanbanHostList, setKanbanHostList] = useState([]);
     const [kanbanCollabList, setKanbanCollabList] = useState([]);
     const navigate = useNavigate();
 
-    const { clicked, setClicked, points, setPoints, target, setTarget } = useContextMenu();
+    const { clicked, setClicked, points, setPoints, contextMenuTarget, setContextMenuTarget } =
+        useContextMenu();
 
-    async function createKanban(e, title, desc) {
-        e.preventDefault();
+    async function createKanban(title, desc) {
         const kanbanRef = await addDoc(collection(db, "kanbans"), {
             name: title,
             description: desc,
@@ -34,7 +35,16 @@ export default function Dashboard() {
     }
     async function deleteKanban() {
         setIsShowConfirmationModal(false);
-        await deleteDoc(doc(db, "kanbans", target.id));
+        await deleteDoc(doc(db, "kanbans", contextMenuTarget.id));
+    }
+
+    async function editKanban(newName, newDesc) {
+        setIsShowEditModal(false);
+        const kanbanRef = doc(db, "kanbans", contextMenuTarget.id);
+        await updateDoc(kanbanRef, {
+            name: newName,
+            description: newDesc,
+        });
     }
 
     // Realtime listening to db changes
@@ -73,7 +83,7 @@ export default function Dashboard() {
                                 x: e.pageX,
                                 y: e.pageY,
                             });
-                            setTarget(kanban);
+                            setContextMenuTarget(kanban);
                         }}
                     >
                         <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
@@ -114,12 +124,22 @@ export default function Dashboard() {
             </div>
             {/* Create new kanban modal */}
             <Modal isShow={isShowCreateModal} setIsShow={setIsShowCreateModal}>
-                <CreateNewKanbanForm createKanban={createKanban} />
+                <KanbanForm handler={createKanban} formTitle={"Создать новую доску"} buttonText={"Создать"} />
+            </Modal>
+            {/* Edit kanban modal */}
+            <Modal isShow={isShowEditModal} setIsShow={setIsShowEditModal}>
+                <KanbanForm
+                    handler={editKanban}
+                    formTitle={"Редактировать доску"}
+                    buttonText={"Редактировать"}
+                    initialName={contextMenuTarget?.data().name}
+                    initialDesc={contextMenuTarget?.data().description}
+                />
             </Modal>
             {/* Delete confirmation modal */}
             <Modal isShow={isShowConfirmationModal} setIsShow={setIsShowConfirmationModal}>
                 <DeleteConfirmation
-                    target={target}
+                    target={contextMenuTarget}
                     deleteKanban={deleteKanban}
                     setIsShowConfirmationModal={setIsShowConfirmationModal}
                 />
@@ -128,7 +148,8 @@ export default function Dashboard() {
                 <ContextMenu
                     top={points.y}
                     left={points.x}
-                    setIsShowConfirmationModal={setIsShowConfirmationModal}
+                    deleteHandler={() => setIsShowConfirmationModal(true)}
+                    editHandler={() => setIsShowEditModal(true)}
                 />
             )}
         </div>

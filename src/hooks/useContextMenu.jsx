@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 const useContextMenu = () => {
     const [clicked, setClicked] = useState(false);
-    const [target, setTarget] = useState(null);
+    const [contextMenuTarget, setContextMenuTarget] = useState(null);
     const [points, setPoints] = useState({
         x: 0,
         y: 0,
@@ -18,8 +18,8 @@ const useContextMenu = () => {
         setClicked,
         points,
         setPoints,
-        target,
-        setTarget,
+        contextMenuTarget,
+        setContextMenuTarget,
     };
 };
 export default useContextMenu;

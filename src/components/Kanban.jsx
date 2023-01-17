@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import TaskCreator from "./TaskCreator";
 import TasksBoard from "./TasksBoard";
-import { getDoc, doc, updateDoc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db, auth } from "./../firebase";
 import useDebounce from "../hooks/useDebounce";
 import { useParams } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
+import { getKanbanDataById, updateKanbanDataById } from "../api/KanbanService";
 
 export default function Kanban() {
     const [groups, setGroups] = useState([]);
@@ -21,40 +22,23 @@ export default function Kanban() {
     //Read from db
     useEffect(() => {
         (async () => {
-            try {
-                const docSnap = await getDoc(doc(db, "kanbans", kanbanId));
-                if (docSnap.exists()) {
-                    setGroups(JSON.parse(docSnap.data().kanban));
-                    setIsHost(JSON.parse(docSnap.data().host === auth.currentUser.uid));
-                    setLoading(false);
-                }
-            } catch (error) {
-                console.error("Error reading a document: ", error);
-            }
+            const kanbanData = await getKanbanDataById(kanbanId);
+            setGroups(JSON.parse(kanbanData.kanban));
+            setIsHost(JSON.parse(kanbanData.host === auth.currentUser.uid));
+            setLoading(false);
         })();
     }, [kanbanId]);
 
     // Write to db
     useEffect(() => {
         if (debouncedGroups.length > 0) {
-            (async () => {
-                try {
-                    const kanbanRef = doc(db, "kanbans", kanbanId);
-                    await updateDoc(kanbanRef, {
-                        kanban: JSON.stringify(debouncedGroups),
-                    });
-                    console.log("Document saved");
-                } catch (error) {
-                    console.error("Error adding a document: ", error);
-                }
-            })();
+            updateKanbanDataById(kanbanId, debouncedGroups);
         }
     }, [debouncedGroups, kanbanId]);
 
     // Realtime listening to db changes
     useEffect(() => {
         const unsub = onSnapshot(doc(db, "kanbans", kanbanId), (doc) => {
-            console.log("Current data: ", doc.data());
             setGroups(JSON.parse(doc.data().kanban));
         });
         return unsub;

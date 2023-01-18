@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { addUserToFirestore } from "../api/UserService";
+import { addUserToFirestore } from "../api/userService";
 
 export default function RegisterForm() {
     const usernameRef = useRef();

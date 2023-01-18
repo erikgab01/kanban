@@ -4,11 +4,11 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "./utility/Modal";
-import { collection, addDoc, onSnapshot, query, where, deleteDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db, auth } from "./../firebase";
-import kanban_setup from "./../kanban_setup";
 import useContextMenu from "./../hooks/useContextMenu";
 import ContextMenu from "./utility/ContextMenu";
+import { createNewKanban, deleteKanban, updateKanbanInfo } from "../api/kanbanService";
 
 export default function Dashboard() {
     // TODO: loading
@@ -22,29 +22,19 @@ export default function Dashboard() {
     const { clicked, setClicked, points, setPoints, contextMenuTarget, setContextMenuTarget } =
         useContextMenu();
 
-    async function createKanban(title, desc) {
-        const kanbanRef = await addDoc(collection(db, "kanbans"), {
-            name: title,
-            description: desc,
-            host: auth.currentUser.uid,
-            collaborators: [],
-            kanban: JSON.stringify(kanban_setup),
-        });
-        console.log("Document written with ID: ", kanbanRef.id);
-        navigate(`/kanban/${kanbanRef.id}`);
+    async function handleCreateKanban(title, desc) {
+        const kanbanId = await createNewKanban(title, desc);
+        console.log("Document written with ID: ", kanbanId);
+        navigate(`/kanban/${kanbanId}`);
     }
-    async function deleteKanban() {
+    async function handleDeleteKanban() {
         setIsShowConfirmationModal(false);
-        await deleteDoc(doc(db, "kanbans", contextMenuTarget.id));
+        await deleteKanban(contextMenuTarget.id);
     }
 
-    async function editKanban(newName, newDesc) {
+    async function handleEditKanban(newName, newDesc) {
         setIsShowEditModal(false);
-        const kanbanRef = doc(db, "kanbans", contextMenuTarget.id);
-        await updateDoc(kanbanRef, {
-            name: newName,
-            description: newDesc,
-        });
+        await updateKanbanInfo(contextMenuTarget.id, newName, newDesc);
     }
 
     // Realtime listening to db changes
@@ -124,12 +114,16 @@ export default function Dashboard() {
             </div>
             {/* Create new kanban modal */}
             <Modal isShow={isShowCreateModal} setIsShow={setIsShowCreateModal}>
-                <KanbanForm handler={createKanban} formTitle={"Создать новую доску"} buttonText={"Создать"} />
+                <KanbanForm
+                    handler={handleCreateKanban}
+                    formTitle={"Создать новую доску"}
+                    buttonText={"Создать"}
+                />
             </Modal>
             {/* Edit kanban modal */}
             <Modal isShow={isShowEditModal} setIsShow={setIsShowEditModal}>
                 <KanbanForm
-                    handler={editKanban}
+                    handler={handleEditKanban}
                     formTitle={"Редактировать доску"}
                     buttonText={"Редактировать"}
                     initialName={contextMenuTarget?.data().name}
@@ -140,7 +134,7 @@ export default function Dashboard() {
             <Modal isShow={isShowConfirmationModal} setIsShow={setIsShowConfirmationModal}>
                 <DeleteConfirmation
                     target={contextMenuTarget}
-                    deleteKanban={deleteKanban}
+                    deleteKanban={handleDeleteKanban}
                     setIsShowConfirmationModal={setIsShowConfirmationModal}
                 />
             </Modal>

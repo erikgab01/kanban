@@ -1,8 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { db } from "../firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addUserToFirestore } from "../api/UserService";
 
 export default function RegisterForm() {
     const usernameRef = useRef();
@@ -25,11 +24,11 @@ export default function RegisterForm() {
             const userCredential = await signup(emailRef.current.value, passwordRef.current.value);
             await updateProfileName(usernameRef.current.value);
             // Add user to firestore
-            await addDoc(collection(db, "users"), {
-                user_id: userCredential.user.uid,
-                username: userCredential.user.displayName,
-                email: userCredential.user.email,
-            });
+            await addUserToFirestore(
+                userCredential.user.uid,
+                userCredential.user.displayName,
+                userCredential.user.email
+            );
             navigate("/");
         } catch (error) {
             if (error.code === "auth/weak-password") setError("Пароль слишком короткий. Минимум 6 символов");

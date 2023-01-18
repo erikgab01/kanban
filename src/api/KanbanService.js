@@ -1,7 +1,8 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
+import kanban_setup from "../kanban_setup";
 
-async function getKanbanDataById(kanbanId) {
+async function getKanbanData(kanbanId) {
     try {
         const docSnap = await getDoc(doc(db, "kanbans", kanbanId));
         if (docSnap.exists()) {
@@ -14,7 +15,7 @@ async function getKanbanDataById(kanbanId) {
     }
 }
 
-async function updateKanbanDataById(kanbanId, data) {
+async function updateKanbanData(kanbanId, data) {
     try {
         const kanbanRef = doc(db, "kanbans", kanbanId);
         await updateDoc(kanbanRef, {
@@ -26,4 +27,27 @@ async function updateKanbanDataById(kanbanId, data) {
     }
 }
 
-export { getKanbanDataById, updateKanbanDataById };
+async function createNewKanban(title, desc) {
+    const kanbanRef = await addDoc(collection(db, "kanbans"), {
+        name: title,
+        description: desc,
+        host: auth.currentUser.uid,
+        collaborators: [],
+        kanban: JSON.stringify(kanban_setup),
+    });
+    return kanbanRef.id;
+}
+
+async function deleteKanban(kanbanId) {
+    await deleteDoc(doc(db, "kanbans", kanbanId));
+}
+
+async function updateKanbanInfo(kanbanId, newName, newDesc) {
+    const kanbanRef = doc(db, "kanbans", kanbanId.id);
+    await updateDoc(kanbanRef, {
+        name: newName,
+        description: newDesc,
+    });
+}
+
+export { getKanbanData, updateKanbanData, updateKanbanInfo, createNewKanban, deleteKanban };

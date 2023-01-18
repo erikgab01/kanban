@@ -6,7 +6,7 @@ import { db, auth } from "./../firebase";
 import useDebounce from "../hooks/useDebounce";
 import { useParams } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
-import { getKanbanDataById, updateKanbanDataById } from "../api/KanbanService";
+import { getKanbanData, updateKanbanData } from "../api/kanbanService";
 
 export default function Kanban() {
     const [groups, setGroups] = useState([]);
@@ -22,7 +22,7 @@ export default function Kanban() {
     //Read from db
     useEffect(() => {
         (async () => {
-            const kanbanData = await getKanbanDataById(kanbanId);
+            const kanbanData = await getKanbanData(kanbanId);
             setGroups(JSON.parse(kanbanData.kanban));
             setIsHost(JSON.parse(kanbanData.host === auth.currentUser.uid));
             setLoading(false);
@@ -32,7 +32,7 @@ export default function Kanban() {
     // Write to db
     useEffect(() => {
         if (debouncedGroups.length > 0) {
-            updateKanbanDataById(kanbanId, debouncedGroups);
+            updateKanbanData(kanbanId, debouncedGroups);
         }
     }, [debouncedGroups, kanbanId]);
 

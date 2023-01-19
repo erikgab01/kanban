@@ -5,50 +5,67 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "./utility/Modal";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { db, auth } from "./../firebase";
-import useContextMenu from "./../hooks/useContextMenu";
+import { db, auth } from "../firebase";
+import useContextMenu from "../hooks/useContextMenu";
 import ContextMenu from "./utility/ContextMenu";
 import { createNewKanban, deleteKanban, updateKanbanInfo } from "../api/kanbanService";
+
+export interface Kanban {
+    id: string;
+    data: () => KanbanData;
+}
+
+export interface KanbanData {
+    name: string;
+    description: string;
+    collaborators: string[];
+    host: string;
+    kanban: string;
+}
 
 export default function Dashboard() {
     // TODO: loading
     const [isShowCreateModal, setIsShowCreateModal] = useState(false);
     const [isShowEditModal, setIsShowEditModal] = useState(false);
     const [isShowConfirmationModal, setIsShowConfirmationModal] = useState(false);
-    const [kanbanHostList, setKanbanHostList] = useState([]);
-    const [kanbanCollabList, setKanbanCollabList] = useState([]);
+    const [kanbanHostList, setKanbanHostList] = useState<Kanban[]>([]);
+    const [kanbanCollabList, setKanbanCollabList] = useState<Kanban[]>([]);
     const navigate = useNavigate();
 
     const { clicked, setClicked, points, setPoints, contextMenuTarget, setContextMenuTarget } =
         useContextMenu();
 
-    async function handleCreateKanban(title, desc) {
+    async function handleCreateKanban(title: string, desc: string) {
         const kanbanId = await createNewKanban(title, desc);
         console.log("Document written with ID: ", kanbanId);
         navigate(`/kanban/${kanbanId}`);
     }
     async function handleDeleteKanban() {
         setIsShowConfirmationModal(false);
-        await deleteKanban(contextMenuTarget.id);
+        if (contextMenuTarget) {
+            await deleteKanban(contextMenuTarget.id);
+        }
     }
 
-    async function handleEditKanban(newName, newDesc) {
+    async function handleEditKanban(newName: string, newDesc: string) {
         setIsShowEditModal(false);
-        await updateKanbanInfo(contextMenuTarget.id, newName, newDesc);
+        if (contextMenuTarget) {
+            await updateKanbanInfo(contextMenuTarget.id, newName, newDesc);
+        }
     }
 
     // Realtime listening to db changes
     useEffect(() => {
-        const q1 = query(collection(db, "kanbans"), where("host", "==", auth.currentUser.uid));
+        const q1 = query(collection(db, "kanbans"), where("host", "==", auth.currentUser?.uid));
         const q2 = query(
             collection(db, "kanbans"),
-            where("collaborators", "array-contains", auth.currentUser.uid)
+            where("collaborators", "array-contains", auth.currentUser?.uid)
         );
         const unsubscribe1 = onSnapshot(q1, (querySnapshot) => {
-            setKanbanHostList(querySnapshot.docs);
+            setKanbanHostList(querySnapshot.docs as unknown as Kanban[]);
         });
         const unsubscribe2 = onSnapshot(q2, (querySnapshot) => {
-            setKanbanCollabList(querySnapshot.docs);
+            setKanbanCollabList(querySnapshot.docs as unknown as Kanban[]);
         });
         return () => {
             unsubscribe1();
@@ -89,7 +106,7 @@ export default function Dashboard() {
                     className="w-60 h-28 p-6 text-2xl bg-white border border-dashed border-gray-600 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                     onClick={() => setIsShowCreateModal(true)}
                 >
-                    <FontAwesomeIcon icon="fa-solid fa-plus" />
+                    <FontAwesomeIcon icon={["fas", "plus"]} />
                 </button>
             </div>
             <h4 className="font-medium text-cente mt-5">Доски, к которым вам дали доступ</h4>

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Kanban } from "../components/Dashboard";
+import { KanbanDoc } from "../components/Dashboard";
 const useContextMenu = () => {
     const [clicked, setClicked] = useState(false);
-    const [contextMenuTarget, setContextMenuTarget] = useState<Kanban | null>(null);
+    const [contextMenuTarget, setContextMenuTarget] = useState<KanbanDoc | null>(null);
     const [points, setPoints] = useState({
         x: 0,
         y: 0,

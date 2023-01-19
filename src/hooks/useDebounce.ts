@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { KanbanStructure } from "./../kanban_setup";
 
-export default function useDebounce(value, delay) {
+export default function useDebounce(value: KanbanStructure[], delay: number = 500) {
     const [debouncedValue, setDebouncedValue] = useState(value);
 
     useEffect(() => {
-        const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
+        const timer = setTimeout(() => setDebouncedValue(value), delay);
 
         return () => {
             clearTimeout(timer);

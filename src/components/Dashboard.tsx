@@ -10,7 +10,7 @@ import useContextMenu from "../hooks/useContextMenu";
 import ContextMenu from "./utility/ContextMenu";
 import { createNewKanban, deleteKanban, updateKanbanInfo } from "../api/kanbanService";
 
-export interface Kanban {
+export interface KanbanDoc {
     id: string;
     data: () => KanbanData;
 }
@@ -28,8 +28,8 @@ export default function Dashboard() {
     const [isShowCreateModal, setIsShowCreateModal] = useState(false);
     const [isShowEditModal, setIsShowEditModal] = useState(false);
     const [isShowConfirmationModal, setIsShowConfirmationModal] = useState(false);
-    const [kanbanHostList, setKanbanHostList] = useState<Kanban[]>([]);
-    const [kanbanCollabList, setKanbanCollabList] = useState<Kanban[]>([]);
+    const [kanbanHostList, setKanbanHostList] = useState<KanbanDoc[]>([]);
+    const [kanbanCollabList, setKanbanCollabList] = useState<KanbanDoc[]>([]);
     const navigate = useNavigate();
 
     const { clicked, setClicked, points, setPoints, contextMenuTarget, setContextMenuTarget } =
@@ -62,10 +62,10 @@ export default function Dashboard() {
             where("collaborators", "array-contains", auth.currentUser?.uid)
         );
         const unsubscribe1 = onSnapshot(q1, (querySnapshot) => {
-            setKanbanHostList(querySnapshot.docs as unknown as Kanban[]);
+            setKanbanHostList(querySnapshot.docs as unknown as KanbanDoc[]);
         });
         const unsubscribe2 = onSnapshot(q2, (querySnapshot) => {
-            setKanbanCollabList(querySnapshot.docs as unknown as Kanban[]);
+            setKanbanCollabList(querySnapshot.docs as unknown as KanbanDoc[]);
         });
         return () => {
             unsubscribe1();

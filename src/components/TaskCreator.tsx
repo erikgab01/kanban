@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { nanoid } from "nanoid";
+import { KanbanStructure } from "../kanban_setup";
 
-export default function TaskCreator({ setGroups }) {
+interface TaskCreatorProps {
+    setGroups: React.Dispatch<React.SetStateAction<KanbanStructure[]>>;
+}
+
+export default function TaskCreator({ setGroups }: TaskCreatorProps) {
     const [taskName, setTaskName] = useState("");
-    function addTask(e) {
+    function addTask(e: React.FormEvent) {
         e.preventDefault();
         setGroups((oldGroups) => {
             let newGroups = JSON.parse(JSON.stringify(oldGroups));

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "./../Contexts/AuthContext";
+import { useAuth } from "../Contexts/AuthContext";
 
 export default function Header() {
     const { currentUser, logout } = useAuth();

@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { getDoc, getDocs, doc, updateDoc, query, collection, where, arrayUnion } from "firebase/firestore";
-import { db, auth } from "./../firebase";
+import { db, auth } from "../firebase";
+import { KanbanDoc } from "./Dashboard";
 
-export default function InviteMenu({ kanbanId }) {
+interface InviteMenuProps {
+    kanbanId: string;
+}
+
+export default function InviteMenu({ kanbanId }: InviteMenuProps) {
     // TODO: display errors and success messages
     const [email, setEmail] = useState("");
-    async function inviteUser(e) {
+    async function inviteUser(e: React.FormEvent) {
         e.preventDefault();
         try {
             const q = query(collection(db, "users"), where("email", "==", email));
@@ -16,8 +21,8 @@ export default function InviteMenu({ kanbanId }) {
             }
             const newUser = userRef.docs[0];
             const kanbanRef = doc(db, "kanbans", kanbanId);
-            const kanban = await getDoc(kanbanRef);
-            const isHost = kanban.data().host === auth.currentUser.uid;
+            const kanban = (await getDoc(kanbanRef)) as unknown as KanbanDoc;
+            const isHost = kanban.data().host === auth.currentUser?.uid;
             const invitedUserIsHost = kanban.data().host === newUser.data().user_id;
             const invitedUserIsAlreadyCollaborator = kanban
                 .data()

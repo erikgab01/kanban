@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import TaskCreator from "./TaskCreator";
 import TasksBoard from "./TasksBoard";
 import { doc, onSnapshot } from "firebase/firestore";
-import { db, auth } from "./../firebase";
+import { db, auth } from "../firebase";
 import useDebounce from "../hooks/useDebounce";
 import { useParams } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
 import { getKanbanData, updateKanbanData } from "../api/kanbanService";
+import { KanbanStructure } from "./../kanban_setup";
+import { KanbanDoc, KanbanData } from "./Dashboard";
 
 export default function Kanban() {
-    const [groups, setGroups] = useState([]);
+    const [groups, setGroups] = useState<KanbanStructure[]>([]);
     const [loading, setLoading] = useState(true);
     const [isHost, setIsHost] = useState(false);
     const debouncedGroups = useDebounce(groups, 1000);
@@ -22,9 +24,9 @@ export default function Kanban() {
     //Read from db
     useEffect(() => {
         (async () => {
-            const kanbanData = await getKanbanData(kanbanId);
+            const kanbanData = (await getKanbanData(kanbanId!)) as KanbanData;
             setGroups(JSON.parse(kanbanData.kanban));
-            setIsHost(JSON.parse(kanbanData.host === auth.currentUser.uid));
+            setIsHost(kanbanData.host === auth.currentUser?.uid);
             setLoading(false);
         })();
     }, [kanbanId]);
@@ -32,14 +34,15 @@ export default function Kanban() {
     // Write to db
     useEffect(() => {
         if (debouncedGroups.length > 0) {
-            updateKanbanData(kanbanId, debouncedGroups);
+            updateKanbanData(kanbanId!, debouncedGroups);
         }
     }, [debouncedGroups, kanbanId]);
 
     // Realtime listening to db changes
     useEffect(() => {
-        const unsub = onSnapshot(doc(db, "kanbans", kanbanId), (doc) => {
-            setGroups(JSON.parse(doc.data().kanban));
+        const unsub = onSnapshot(doc(db, "kanbans", kanbanId!), (doc) => {
+            const kanban = doc as unknown as KanbanDoc;
+            setGroups(JSON.parse(kanban.data().kanban));
         });
         return unsub;
     }, [kanbanId]);
@@ -69,7 +72,7 @@ export default function Kanban() {
         <div className="container mx-auto">
             <div className="flex gap-8">
                 <TaskCreator setGroups={setGroups} />
-                {isHost && <InviteMenu kanbanId={kanbanId} />}
+                {isHost && <InviteMenu kanbanId={kanbanId!} />}
             </div>
             <TasksBoard groups={groups} setGroups={setGroups} />
         </div>

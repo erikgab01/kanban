@@ -1,7 +1,15 @@
 import React from "react";
-export function DeleteConfirmation({ target, deleteKanban, setIsShowConfirmationModal }) {
+import { KanbanDoc } from "./Dashboard";
+
+interface DeleteConfirmProps {
+    target: KanbanDoc | null;
+    deleteKanban: () => void;
+    setIsShowConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function DeleteConfirmation({ target, deleteKanban, setIsShowConfirmationModal }: DeleteConfirmProps) {
     return (
-        <div class="p-6 text-center">
+        <div className="p-6 text-center">
             <svg
                 aria-hidden="true"
                 className="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200"

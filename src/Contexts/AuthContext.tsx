@@ -9,17 +9,31 @@ import {
     setPersistence,
     browserLocalPersistence,
     browserSessionPersistence,
+    User,
+    UserCredential,
 } from "firebase/auth";
 
-const AuthContext = React.createContext();
+interface CurrentUserContextType {
+    currentUser: User | null;
+    signup: (email: string, password: string) => Promise<UserCredential>;
+    login: (email: string, password: string, remember?: boolean) => Promise<UserCredential>;
+    logout: () => void;
+    updateProfileName: (name: string) => void;
+}
+
+interface AuthProps {
+    children: React.ReactNode;
+}
+
+const AuthContext = React.createContext<CurrentUserContextType>({} as CurrentUserContextType);
 
 export function useAuth() {
     return useContext(AuthContext);
 }
 
 //TODO: Google auth option
-export function AuthProvider({ children }) {
-    const [currentUser, setCurrentUser] = useState();
+export function AuthProvider({ children }: AuthProps) {
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     // Observer is called after the redirect, so user ends up in the login page again
@@ -32,11 +46,11 @@ export function AuthProvider({ children }) {
         return unsubscribe;
     }, []);
 
-    function signup(email, password) {
+    function signup(email: string, password: string) {
         return createUserWithEmailAndPassword(auth, email, password);
     }
 
-    async function login(email, password, remember = false) {
+    async function login(email: string, password: string, remember = false) {
         if (remember) {
             await setPersistence(auth, browserLocalPersistence);
             return signInWithEmailAndPassword(auth, email, password);
@@ -50,10 +64,12 @@ export function AuthProvider({ children }) {
         return signOut(auth);
     }
 
-    function updateProfileName(name) {
-        return updateProfile(auth.currentUser, {
-            displayName: name,
-        });
+    function updateProfileName(name: string) {
+        if (auth.currentUser) {
+            return updateProfile(auth.currentUser, {
+                displayName: name,
+            });
+        }
     }
 
     const value = {

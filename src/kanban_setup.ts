@@ -1,6 +1,16 @@
 import { nanoid } from "nanoid";
 
-const kanban_setup = [
+export interface KanbanStructure {
+    title: string;
+    color: string;
+    tasks: {
+        id: string;
+        content: string;
+    }[];
+    isTrashBin?: boolean;
+}
+
+const kanban_setup: KanbanStructure[] = [
     {
         title: "Бэклог",
         color: "#6A6E6B",

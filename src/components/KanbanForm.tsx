@@ -1,7 +1,22 @@
 import React, { useRef } from "react";
-export function KanbanForm({ handler, formTitle, buttonText, initialName = "", initialDesc = "" }) {
-    const titleRef = useRef(null);
-    const descRef = useRef(null);
+
+interface KanbanFormProps {
+    handler: (name: string, desc: string) => void;
+    formTitle: string;
+    buttonText: string;
+    initialName?: string;
+    initialDesc?: string;
+}
+
+export function KanbanForm({
+    handler,
+    formTitle,
+    buttonText,
+    initialName = "",
+    initialDesc = "",
+}: KanbanFormProps) {
+    const titleRef = useRef<HTMLInputElement>(null);
+    const descRef = useRef<HTMLInputElement>(null);
     return (
         <div className="px-6 py-6 lg:px-8">
             <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">{formTitle}</h3>
@@ -9,7 +24,9 @@ export function KanbanForm({ handler, formTitle, buttonText, initialName = "", i
                 className="space-y-6"
                 onSubmit={(e) => {
                     e.preventDefault();
-                    handler(titleRef.current.value, descRef.current.value);
+                    if (titleRef.current && descRef.current) {
+                        handler(titleRef.current.value, descRef.current.value);
+                    }
                 }}
             >
                 <div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { getDoc, getDocs, doc, updateDoc, query, collection, where, arrayUnion } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { KanbanDoc } from "./Dashboard";
+import { KanbanDoc } from "../types";
 
 interface InviteMenuProps {
     kanbanId: string;

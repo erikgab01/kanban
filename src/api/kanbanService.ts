@@ -1,12 +1,13 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import kanban_setup from "../kanban_setup";
+import { KanbanData } from "./../types";
 
 async function getKanbanData(kanbanId: string) {
     try {
         const docSnap = await getDoc(doc(db, "kanbans", kanbanId));
         if (docSnap.exists()) {
-            return docSnap.data();
+            return docSnap.data() as KanbanData;
         }
         return null;
     } catch (error) {

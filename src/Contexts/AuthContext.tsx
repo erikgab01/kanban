@@ -12,6 +12,7 @@ import {
     User,
     UserCredential,
 } from "firebase/auth";
+import { PropsWithChildren } from "../types";
 
 interface CurrentUserContextType {
     currentUser: User | null;
@@ -21,10 +22,6 @@ interface CurrentUserContextType {
     updateProfileName: (name: string) => void;
 }
 
-interface AuthProps {
-    children: React.ReactNode;
-}
-
 const AuthContext = React.createContext<CurrentUserContextType>({} as CurrentUserContextType);
 
 export function useAuth() {
@@ -32,7 +29,7 @@ export function useAuth() {
 }
 
 //TODO: Google auth option
-export function AuthProvider({ children }: AuthProps) {
+export function AuthProvider({ children }: PropsWithChildren) {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 

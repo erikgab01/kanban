@@ -7,8 +7,7 @@ import useDebounce from "../hooks/useDebounce";
 import { useParams } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
 import { getKanbanData, updateKanbanData } from "../api/kanbanService";
-import { KanbanStructure } from "./../kanban_setup";
-import { KanbanDoc, KanbanData } from "./Dashboard";
+import { KanbanData, KanbanDoc, KanbanStructure } from "../types";
 
 export default function Kanban() {
     const [groups, setGroups] = useState<KanbanStructure[]>([]);
@@ -24,10 +23,12 @@ export default function Kanban() {
     //Read from db
     useEffect(() => {
         (async () => {
-            const kanbanData = (await getKanbanData(kanbanId!)) as KanbanData;
-            setGroups(JSON.parse(kanbanData.kanban));
-            setIsHost(kanbanData.host === auth.currentUser?.uid);
-            setLoading(false);
+            const kanbanData = await getKanbanData(kanbanId!);
+            if (kanbanData) {
+                setGroups(JSON.parse(kanbanData.kanban));
+                setIsHost(kanbanData.host === auth.currentUser?.uid);
+                setLoading(false);
+            }
         })();
     }, [kanbanId]);
 

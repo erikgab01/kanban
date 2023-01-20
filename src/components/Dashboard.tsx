@@ -9,19 +9,7 @@ import { db, auth } from "../firebase";
 import useContextMenu from "../hooks/useContextMenu";
 import ContextMenu from "./utility/ContextMenu";
 import { createNewKanban, deleteKanban, updateKanbanInfo } from "../api/kanbanService";
-
-export interface KanbanDoc {
-    id: string;
-    data: () => KanbanData;
-}
-
-export interface KanbanData {
-    name: string;
-    description: string;
-    collaborators: string[];
-    host: string;
-    kanban: string;
-}
+import { KanbanDoc } from "../types";
 
 export default function Dashboard() {
     // TODO: loading

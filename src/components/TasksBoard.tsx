@@ -1,6 +1,6 @@
 import React from "react";
 import { DragDropContext, Droppable, DropResult, DraggableLocation } from "react-beautiful-dnd";
-import { KanbanStructure } from "../kanban_setup";
+import { KanbanStructure } from "../types";
 import { hexToRgb } from "../utility";
 import Task from "./Task";
 
@@ -72,7 +72,7 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
         <DragDropContext onDragEnd={onDragEnd}>
             <section className="flex gap-12 mt-8">
                 {groups.map((group, groupI) => {
-                    const { r, g, b } = hexToRgb(group.color)!;
+                    const { r, g, b } = hexToRgb(group.color);
                     const textColor = r * 0.299 + g * 0.587 + b * 0.114 > 186 ? "#000000" : "#ffffff";
                     return (
                         <div key={groupI} className="flex flex-col min-w-[240px]">

@@ -4,33 +4,36 @@ import { useNavigate } from "react-router-dom";
 import { addUserToFirestore } from "../api/userService";
 
 export default function RegisterForm() {
-    const usernameRef = useRef();
-    const emailRef = useRef();
-    const passwordRef = useRef();
-    const passwordConfirmRef = useRef();
+    const usernameRef = useRef<HTMLInputElement>(null);
+    const emailRef = useRef<HTMLInputElement>(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
+    const passwordConfirmRef = useRef<HTMLInputElement>(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const { signup, updateProfileName } = useAuth();
 
-    async function handleSubmit(e) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+        // TODO: maybe some form validation (react-hook-form)
+        if (passwordRef.current?.value !== passwordConfirmRef.current?.value) {
             return setError("Пароли не совпадают");
         }
         setLoading(true);
         try {
-            const userCredential = await signup(emailRef.current.value, passwordRef.current.value);
-            await updateProfileName(usernameRef.current.value);
-            // Add user to firestore
-            await addUserToFirestore(
-                userCredential.user.uid,
-                userCredential.user.displayName,
-                userCredential.user.email
-            );
-            navigate("/");
-        } catch (error) {
+            if (emailRef.current && passwordRef.current && usernameRef.current) {
+                const userCredential = await signup(emailRef.current.value, passwordRef.current.value);
+                await updateProfileName(usernameRef.current.value);
+                // Add user to firestore
+                await addUserToFirestore(
+                    userCredential.user.uid,
+                    userCredential.user.displayName!,
+                    userCredential.user.email!
+                );
+                navigate("/");
+            }
+        } catch (error: any) {
             if (error.code === "auth/weak-password") setError("Пароль слишком короткий. Минимум 6 символов");
             else if (error.code === "auth/email-already-in-use") setError("Почта уже используется");
             else setError("Ошибка при создании аккаунта");

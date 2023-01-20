@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { KanbanDoc } from "../components/Dashboard";
+import { KanbanDoc } from "../types";
+
 const useContextMenu = () => {
     const [clicked, setClicked] = useState(false);
     const [contextMenuTarget, setContextMenuTarget] = useState<KanbanDoc | null>(null);

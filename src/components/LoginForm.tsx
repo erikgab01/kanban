@@ -4,9 +4,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 // TODO: forget password
 export default function LoginForm() {
-    const emailRef = useRef();
-    const passwordRef = useRef();
-    const remember = useRef();
+    const emailRef = useRef<HTMLInputElement>(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
+    const remember = useRef<HTMLInputElement>(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -15,12 +15,14 @@ export default function LoginForm() {
 
     const { login } = useAuth();
 
-    async function handleSubmit(e) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setLoading(true);
         try {
-            await login(emailRef.current.value, passwordRef.current.value, remember.current.checked);
-            navigate(from, { replace: true });
+            if (emailRef.current && passwordRef.current && remember.current) {
+                await login(emailRef.current.value, passwordRef.current.value, remember.current.checked);
+                navigate(from, { replace: true });
+            }
         } catch {
             setError("Неправильный логин или пароль");
         }

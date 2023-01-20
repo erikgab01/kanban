@@ -2,20 +2,37 @@ import React, { useRef, useEffect } from "react";
 import { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { KanbanStructure, TaskData } from "./../types";
 
-// Move groups to context
-export default function Task({ task, taskI, groupI, color, groups, setGroups }) {
+interface TaskProps {
+    task: TaskData;
+    taskI: number;
+    groupI: number;
+    color: string;
+    groups: KanbanStructure[];
+    setGroups: React.Dispatch<React.SetStateAction<KanbanStructure[]>>;
+}
+
+// TODO: Move groups to context
+export default function Task({ task, taskI, groupI, color, groups, setGroups }: TaskProps) {
     const [isEditing, setIsEditing] = useState(false);
-    const textareaRef = useRef(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     // Autoresize textarea
     useEffect(() => {
-        textareaRef.current.style.height = "0px";
-        const scrollHeight = textareaRef.current.scrollHeight;
-        textareaRef.current.style.height = scrollHeight + "px";
-        //console.log(textareaRef);
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "0px";
+            const scrollHeight = textareaRef.current.scrollHeight;
+            textareaRef.current.style.height = scrollHeight + "px";
+            //console.log(textareaRef);
+        }
     }, [task.content]);
 
-    const getItemStyle = (isDragging, draggableStyle, draggingOver, defaultColor) => ({
+    const getItemStyle = (
+        isDragging: boolean,
+        draggableStyle: any,
+        draggingOver: any,
+        defaultColor: string
+    ) => ({
         // some basic styles to make the items look a bit nicer
         borderColor: draggingOver ? groups[draggingOver].color : defaultColor,
         // change background colour if dragging
@@ -23,7 +40,7 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }) 
         // styles we need to apply on draggables
         ...draggableStyle,
     });
-    const updateTask = (e) => {
+    const updateTask = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setGroups((oldGroups) => {
             const newGroups = JSON.parse(JSON.stringify(oldGroups));
             newGroups[groupI].tasks[taskI].content = e.target.value;
@@ -52,7 +69,7 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }) 
                             value={task.content}
                             onChange={updateTask}
                             onKeyDown={(e) => (e.key === "Enter" ? setIsEditing(!isEditing) : 0)}
-                            rows="1"
+                            rows={1}
                             ref={textareaRef}
                         />
                     ) : (
@@ -60,7 +77,7 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }) 
                             className="w-full resize-none overflow-hidden bg-inherit pointer-events-none"
                             value={task.content}
                             disabled
-                            rows="1"
+                            rows={1}
                             ref={textareaRef}
                         />
                     )}
@@ -72,7 +89,7 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }) 
                         }
                         onClick={() => setIsEditing(!isEditing)}
                     >
-                        <FontAwesomeIcon icon="fa-solid fa-pen-to-square" />
+                        <FontAwesomeIcon icon={["fas", "pen-to-square"]} />
                     </button>
                 </div>
             )}

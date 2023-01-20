@@ -3,8 +3,9 @@ import { Navigate, useLocation, useParams } from "react-router-dom";
 import { auth, db } from "../../firebase";
 import { getDoc, doc } from "firebase/firestore";
 import { useState } from "react";
+import { KanbanDoc, PropsWithChildren } from "../../types";
 
-export default function PrivateRoute({ children }) {
+export default function PrivateRoute({ children }: PropsWithChildren) {
     let location = useLocation();
     const { kanbanId } = useParams();
     const [isAllowed, setIsAllowed] = useState(true);
@@ -15,14 +16,15 @@ export default function PrivateRoute({ children }) {
     }
     // Check if user is a host/collaborator of this kanban
     // Need a better implementation of this
-    const docRef = doc(db, "kanbans", kanbanId);
+    const docRef = doc(db, "kanbans", kanbanId!);
     getDoc(docRef).then((doc) => {
-        const isUserHost = doc.data().host === auth.currentUser.uid;
-        const isUserCollaborator = doc.data().collaborators.includes(auth.currentUser.uid);
+        const kanbanDoc = doc as unknown as KanbanDoc;
+        const isUserHost = kanbanDoc.data().host === auth.currentUser!.uid;
+        const isUserCollaborator = kanbanDoc.data().collaborators.includes(auth.currentUser!.uid);
         if (!isUserHost && !isUserCollaborator) {
             setIsAllowed(false);
         }
     });
 
-    return isAllowed ? children : <Navigate to="/" />;
+    return isAllowed ? <>{children}</> : <Navigate to="/" />;
 }

@@ -7,7 +7,7 @@ import useDebounce from "../hooks/useDebounce";
 import { useParams } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
 import { getKanbanData, updateKanbanData } from "../api/kanbanService";
-import { KanbanData, KanbanDoc, KanbanStructure } from "../types";
+import { KanbanDoc, KanbanStructure } from "../types";
 
 export default function Kanban() {
     const [groups, setGroups] = useState<KanbanStructure[]>([]);

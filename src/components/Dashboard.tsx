@@ -13,7 +13,6 @@ import { KanbanDoc } from "../types";
 import KanbanSkeleton from "./utility/KanbanSkeleton";
 
 export default function Dashboard() {
-    // TODO: loading
     // TODO: decompose
     const [isLoadingHostKanbans, setIsLoadingHostKanbans] = useState(true);
     const [isLoadingCollabKanbans, setIsLoadingCollabKanbans] = useState(true);
@@ -170,8 +169,10 @@ export default function Dashboard() {
                 <ContextMenu
                     top={points.y}
                     left={points.x}
-                    deleteHandler={() => setIsShowConfirmationModal(true)}
-                    editHandler={() => setIsShowEditModal(true)}
+                    options={[
+                        { name: "Редактировать", handler: () => setIsShowEditModal(true) },
+                        { name: "Удалить", handler: () => setIsShowConfirmationModal(true) },
+                    ]}
                 />
             )}
         </div>

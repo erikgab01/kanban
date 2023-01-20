@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { KanbanDoc } from "../types";
+import { ContextMenuOption, KanbanDoc } from "../types";
 
 const useContextMenu = () => {
     const [clicked, setClicked] = useState(false);
     const [contextMenuTarget, setContextMenuTarget] = useState<KanbanDoc | null>(null);
+    const [contextMenuOptions, setContextMenuOptions] = useState<ContextMenuOption[]>([]);
     const [points, setPoints] = useState({
         x: 0,
         y: 0,
@@ -22,6 +23,8 @@ const useContextMenu = () => {
         setPoints,
         contextMenuTarget,
         setContextMenuTarget,
+        contextMenuOptions,
+        setContextMenuOptions,
     };
 };
 export default useContextMenu;

@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import kanban_setup from "../kanban_setup";
 import { KanbanData } from "./../types";
@@ -54,4 +54,18 @@ async function updateKanbanInfo(kanbanId: string, newName: string, newDesc: stri
     });
 }
 
-export { getKanbanData, updateKanbanData, updateKanbanInfo, createNewKanban, deleteKanban };
+async function removeCollaborator(kanbanId: string, userId: string) {
+    const kanbanRef = doc(db, "kanbans", kanbanId);
+    await updateDoc(kanbanRef, {
+        collaborators: arrayRemove(userId),
+    });
+}
+
+export {
+    getKanbanData,
+    updateKanbanData,
+    updateKanbanInfo,
+    createNewKanban,
+    deleteKanban,
+    removeCollaborator,
+};

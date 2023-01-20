@@ -1,12 +1,10 @@
 import React from "react";
+import { ContextMenuOption } from "../../types";
 
 interface ContextMenuProps {
     top: number;
     left: number;
-    options: {
-        name: string;
-        handler: () => void;
-    }[];
+    options: ContextMenuOption[];
 }
 
 export default function ContextMenu({ top, left, options }: ContextMenuProps) {
@@ -14,7 +12,11 @@ export default function ContextMenu({ top, left, options }: ContextMenuProps) {
         <div className="absolute bg-sky-600 rounded" style={{ top: top + "px", left: left + "px" }}>
             <ul className="list-none m-0 p-2 text-white text-sm">
                 {options.map((option) => (
-                    <li onClick={option.handler} className="py-4 px-3 cursor-pointer hover:bg-sky-700">
+                    <li
+                        key={option.name}
+                        onClick={option.handler}
+                        className="py-4 px-3 cursor-pointer hover:bg-sky-700"
+                    >
                         {option.name}
                     </li>
                 ))}

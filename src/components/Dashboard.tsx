@@ -8,8 +8,8 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import useContextMenu from "../hooks/useContextMenu";
 import ContextMenu from "./utility/ContextMenu";
-import { createNewKanban, deleteKanban, updateKanbanInfo } from "../api/kanbanService";
-import { KanbanDoc } from "../types";
+import { createNewKanban, deleteKanban, removeCollaborator, updateKanbanInfo } from "../api/kanbanService";
+import { ContextMenuOption, KanbanDoc } from "../types";
 import KanbanSkeleton from "./utility/KanbanSkeleton";
 
 export default function Dashboard() {
@@ -23,8 +23,16 @@ export default function Dashboard() {
     const [kanbanCollabList, setKanbanCollabList] = useState<KanbanDoc[]>([]);
     const navigate = useNavigate();
 
-    const { clicked, setClicked, points, setPoints, contextMenuTarget, setContextMenuTarget } =
-        useContextMenu();
+    const {
+        clicked,
+        setClicked,
+        points,
+        setPoints,
+        contextMenuTarget,
+        setContextMenuTarget,
+        contextMenuOptions,
+        setContextMenuOptions,
+    } = useContextMenu();
 
     async function handleCreateKanban(title: string, desc: string) {
         const kanbanId = await createNewKanban(title, desc);
@@ -43,6 +51,23 @@ export default function Dashboard() {
         if (contextMenuTarget) {
             await updateKanbanInfo(contextMenuTarget.id, newName, newDesc);
         }
+    }
+
+    async function handleLeaveCollabKanban() {
+        if (contextMenuTarget && auth.currentUser) {
+            await removeCollaborator(contextMenuTarget.id, auth.currentUser.uid);
+        }
+    }
+
+    function handleContextMenu(e: React.MouseEvent, kanban: KanbanDoc, options: ContextMenuOption[]) {
+        e.preventDefault();
+        setContextMenuOptions(options);
+        setClicked(true);
+        setPoints({
+            x: e.pageX,
+            y: e.pageY,
+        });
+        setContextMenuTarget(kanban);
     }
 
     // Realtime listening to db changes
@@ -84,15 +109,12 @@ export default function Dashboard() {
                                 key={kanban.id}
                                 to={`/kanban/${kanban.id}`}
                                 className="w-60 h-28 p-6 text-center bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                                onContextMenu={(e) => {
-                                    e.preventDefault();
-                                    setClicked(true);
-                                    setPoints({
-                                        x: e.pageX,
-                                        y: e.pageY,
-                                    });
-                                    setContextMenuTarget(kanban);
-                                }}
+                                onContextMenu={(e) =>
+                                    handleContextMenu(e, kanban, [
+                                        { name: "Редактировать", handler: () => setIsShowEditModal(true) },
+                                        { name: "Удалить", handler: () => setIsShowConfirmationModal(true) },
+                                    ])
+                                }
                             >
                                 <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
                                     {kanban.data().name}
@@ -128,6 +150,11 @@ export default function Dashboard() {
                             key={kanban.id}
                             to={`/kanban/${kanban.id}`}
                             className="w-60 h-28 p-6 text-center bg-white border border-yellow-400 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                            onContextMenu={(e) =>
+                                handleContextMenu(e, kanban, [
+                                    { name: "Покинуть", handler: () => handleLeaveCollabKanban() },
+                                ])
+                            }
                         >
                             <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
                                 {kanban.data().name}
@@ -165,16 +192,7 @@ export default function Dashboard() {
                     setIsShowConfirmationModal={setIsShowConfirmationModal}
                 />
             </Modal>
-            {clicked && (
-                <ContextMenu
-                    top={points.y}
-                    left={points.x}
-                    options={[
-                        { name: "Редактировать", handler: () => setIsShowEditModal(true) },
-                        { name: "Удалить", handler: () => setIsShowConfirmationModal(true) },
-                    ]}
-                />
-            )}
+            {clicked && <ContextMenu top={points.y} left={points.x} options={contextMenuOptions} />}
         </div>
     );
 }

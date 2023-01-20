@@ -26,3 +26,8 @@ export interface TaskData {
 export interface PropsWithChildren {
     children: React.ReactNode;
 }
+
+export interface ContextMenuOption {
+    name: string;
+    handler: () => void;
+}

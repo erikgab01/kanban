@@ -6,15 +6,14 @@ import { db, auth } from "../firebase";
 import useDebounce from "../hooks/useDebounce";
 import { useParams } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
-import { getKanbanData, updateKanbanData } from "../api/kanbanService";
 import { KanbanDoc, KanbanStructure } from "../types";
+import KanbanService from "../services/KanbanService";
 
 export default function Kanban() {
     const [groups, setGroups] = useState<KanbanStructure[]>([]);
     const [loading, setLoading] = useState(true);
     const [isHost, setIsHost] = useState(false);
     const debouncedGroups = useDebounce(groups, 1000);
-
     const { kanbanId } = useParams();
 
     //TODO: improve design, make separators for columns in kanban, a tick to move to "done", rename columns
@@ -23,7 +22,7 @@ export default function Kanban() {
     //Read from db
     useEffect(() => {
         (async () => {
-            const kanbanData = await getKanbanData(kanbanId!);
+            const kanbanData = await KanbanService.getKanbanData(kanbanId!);
             if (kanbanData) {
                 setGroups(JSON.parse(kanbanData.kanban));
                 setIsHost(kanbanData.host === auth.currentUser?.uid);
@@ -35,7 +34,7 @@ export default function Kanban() {
     // Write to db
     useEffect(() => {
         if (debouncedGroups.length > 0) {
-            updateKanbanData(kanbanId!, debouncedGroups);
+            KanbanService.updateKanbanData(kanbanId!, debouncedGroups);
         }
     }, [debouncedGroups, kanbanId]);
 

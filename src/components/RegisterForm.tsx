@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { addUserToFirestore } from "../api/userService";
+import UserService from "../services/UserService";
 
 export default function RegisterForm() {
     const usernameRef = useRef<HTMLInputElement>(null);
@@ -16,7 +16,7 @@ export default function RegisterForm() {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        // TODO: maybe some form validation (react-hook-form)
+        // TODO: maybe some form validation (react-hook-form), maybe controlled inputs to ease form validation
         if (passwordRef.current?.value !== passwordConfirmRef.current?.value) {
             return setError("Пароли не совпадают");
         }
@@ -26,7 +26,7 @@ export default function RegisterForm() {
                 const userCredential = await signup(emailRef.current.value, passwordRef.current.value);
                 await updateProfileName(usernameRef.current.value);
                 // Add user to firestore
-                await addUserToFirestore(
+                await UserService.addUserToFirestore(
                     userCredential.user.uid,
                     userCredential.user.displayName!,
                     userCredential.user.email!

@@ -10,6 +10,8 @@ import PrivateRoute from "./components/utility/PrivateRoute";
 
 library.add(fas);
 
+//TODO: Prettier config
+
 const router = createBrowserRouter([
     {
         path: "/",

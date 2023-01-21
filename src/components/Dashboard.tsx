@@ -8,9 +8,9 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import useContextMenu from "../hooks/useContextMenu";
 import ContextMenu from "./utility/ContextMenu";
-import { createNewKanban, deleteKanban, removeCollaborator, updateKanbanInfo } from "../api/kanbanService";
 import { ContextMenuOption, KanbanDoc } from "../types";
 import KanbanSkeleton from "./utility/KanbanSkeleton";
+import KanbanService from "../services/KanbanService";
 
 export default function Dashboard() {
     // TODO: decompose
@@ -22,7 +22,6 @@ export default function Dashboard() {
     const [kanbanHostList, setKanbanHostList] = useState<KanbanDoc[]>([]);
     const [kanbanCollabList, setKanbanCollabList] = useState<KanbanDoc[]>([]);
     const navigate = useNavigate();
-
     const {
         clicked,
         setClicked,
@@ -35,27 +34,27 @@ export default function Dashboard() {
     } = useContextMenu();
 
     async function handleCreateKanban(title: string, desc: string) {
-        const kanbanId = await createNewKanban(title, desc);
+        const kanbanId = await KanbanService.createNewKanban(title, desc);
         console.log("Document written with ID: ", kanbanId);
         navigate(`/kanban/${kanbanId}`);
     }
     async function handleDeleteKanban() {
         setIsShowConfirmationModal(false);
         if (contextMenuTarget) {
-            await deleteKanban(contextMenuTarget.id);
+            await KanbanService.deleteKanban(contextMenuTarget.id);
         }
     }
 
     async function handleEditKanban(newName: string, newDesc: string) {
         setIsShowEditModal(false);
         if (contextMenuTarget) {
-            await updateKanbanInfo(contextMenuTarget.id, newName, newDesc);
+            await KanbanService.updateKanbanInfo(contextMenuTarget.id, newName, newDesc);
         }
     }
 
     async function handleLeaveCollabKanban() {
         if (contextMenuTarget && auth.currentUser) {
-            await removeCollaborator(contextMenuTarget.id, auth.currentUser.uid);
+            await KanbanService.removeCollaborator(contextMenuTarget.id, auth.currentUser.uid);
         }
     }
 

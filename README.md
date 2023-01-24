@@ -8,6 +8,19 @@ Live version can be visited at: [kanban-erikgab01.vercel.app](https://kanban-eri
 
 - Node.js + npm [Install](https://nodejs.org/en/download/)
 
+## Installation
+
+- Clone repository:
+```
+git clone https://github.com/erikgab01/kanban.git
+```
+
+- Install dependencies:
+```
+npm install
+```
+
+- Go to project root folder, create `.env` file and copy the contents of `.env.sample` to it. Replace some variables if needed.
 
 ## Available Scripts
 

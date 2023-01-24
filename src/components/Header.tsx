@@ -1,5 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../Contexts/AuthContext";
+import { ToastContainer } from "react-toastify";
 
 export default function Header() {
     const { currentUser, logout } = useAuth();
@@ -23,6 +24,7 @@ export default function Header() {
                     </div>
                 )}
             </div>
+            <ToastContainer position="bottom-right" newestOnTop />
         </nav>
     );
 }

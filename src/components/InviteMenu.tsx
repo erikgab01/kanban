@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { auth } from "../firebase";
 import KanbanService from "./../services/KanbanService";
 import UserService from "./../services/UserService";
+import { toast } from "react-toastify";
 
 interface InviteMenuProps {
     kanbanId: string;
@@ -16,28 +17,28 @@ export default function InviteMenu({ kanbanId }: InviteMenuProps) {
             const newUser = await UserService.getUserByEmail(email);
             const kanban = await KanbanService.getKanbanData(kanbanId);
             if (!newUser) {
-                console.log("User does not exist");
+                toast.error("Пользователь не существует");
                 return;
             }
             if (!kanban) {
-                console.log("Kanban does not exist");
+                toast.error("Доска не существует");
                 return;
             }
             const isHost = kanban.host === auth.currentUser?.uid;
             const invitedUserIsHost = kanban.host === newUser.userId;
             const invitedUserIsAlreadyCollaborator = kanban.collaborators.includes(newUser.userId);
             if (!isHost) {
-                console.log("You are not a host");
+                toast.error("Вы не являетесь владельцем доски");
                 return;
             }
             if (invitedUserIsHost || invitedUserIsAlreadyCollaborator) {
-                console.log("User is already invited to this kanban");
+                toast.error("Пользователь уже приглашен");
                 return;
             }
             KanbanService.addCollaborator(kanbanId, newUser.userId);
-            console.log("User invited");
+            toast.info("Пользователь приглашен");
         } catch (error) {
-            console.error("Error inviting a user: ", error);
+            toast.error(`Произошла ошибка: ${error}`);
         }
         setEmail("");
     }

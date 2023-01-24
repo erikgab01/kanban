@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { getDoc, getDocs, doc, updateDoc, query, collection, where, arrayUnion } from "firebase/firestore";
-import { db, auth } from "../firebase";
-import { KanbanDoc } from "../types";
+import { auth } from "../firebase";
+import KanbanService from "./../services/KanbanService";
+import UserService from "./../services/UserService";
 
 interface InviteMenuProps {
     kanbanId: string;
@@ -13,20 +13,19 @@ export default function InviteMenu({ kanbanId }: InviteMenuProps) {
     async function inviteUser(e: React.FormEvent) {
         e.preventDefault();
         try {
-            const q = query(collection(db, "users"), where("email", "==", email));
-            const userRef = await getDocs(q);
-            if (userRef.docs.length === 0) {
-                console.log("User not found");
+            const newUser = await UserService.getUserByEmail(email);
+            const kanban = await KanbanService.getKanbanData(kanbanId);
+            if (!newUser) {
+                console.log("User does not exist");
                 return;
             }
-            const newUser = userRef.docs[0];
-            const kanbanRef = doc(db, "kanbans", kanbanId);
-            const kanban = (await getDoc(kanbanRef)) as unknown as KanbanDoc;
-            const isHost = kanban.data().host === auth.currentUser?.uid;
-            const invitedUserIsHost = kanban.data().host === newUser.data().user_id;
-            const invitedUserIsAlreadyCollaborator = kanban
-                .data()
-                .collaborators.includes(newUser.data().user_id);
+            if (!kanban) {
+                console.log("Kanban does not exist");
+                return;
+            }
+            const isHost = kanban.host === auth.currentUser?.uid;
+            const invitedUserIsHost = kanban.host === newUser.id;
+            const invitedUserIsAlreadyCollaborator = kanban.collaborators.includes(newUser.id);
             if (!isHost) {
                 console.log("You are not a host");
                 return;
@@ -35,10 +34,7 @@ export default function InviteMenu({ kanbanId }: InviteMenuProps) {
                 console.log("User is already invited to this kanban");
                 return;
             }
-
-            await updateDoc(kanbanRef, {
-                collaborators: arrayUnion(newUser.data().user_id),
-            });
+            KanbanService.addCollaborator(kanbanId, newUser.id);
             console.log("User invited");
         } catch (error) {
             console.error("Error inviting a user: ", error);

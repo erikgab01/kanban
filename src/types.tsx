@@ -5,12 +5,14 @@ export interface KanbanStructure {
     isTrashBin?: boolean;
 }
 
-export interface KanbanDoc {
+export interface UserData {
     id: string;
-    data: () => KanbanData;
+    username: string;
+    email: string;
 }
 
 export interface KanbanData {
+    id: string;
     name: string;
     description: string;
     collaborators: string[];

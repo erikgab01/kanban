@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import TaskCreator from "./TaskCreator";
 import TasksBoard from "./TasksBoard";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db, auth } from "../firebase";
+import { auth } from "../firebase";
 import useDebounce from "../hooks/useDebounce";
 import { useParams } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
-import { KanbanDoc, KanbanStructure } from "../types";
+import { KanbanStructure } from "../types";
 import KanbanService from "../services/KanbanService";
 
 export default function Kanban() {
@@ -40,10 +39,7 @@ export default function Kanban() {
 
     // Realtime listening to db changes
     useEffect(() => {
-        const unsub = onSnapshot(doc(db, "kanbans", kanbanId!), (doc) => {
-            const kanban = doc as unknown as KanbanDoc;
-            setGroups(JSON.parse(kanban.data().kanban));
-        });
+        const unsub = KanbanService.setKanbanListener(kanbanId!, setGroups);
         return unsub;
     }, [kanbanId]);
 

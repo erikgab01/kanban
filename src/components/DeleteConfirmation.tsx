@@ -1,13 +1,17 @@
 import React from "react";
-import { KanbanDoc } from "../types";
+import { KanbanData } from "./../types";
 
 interface DeleteConfirmProps {
-    target: KanbanDoc | null;
+    target: KanbanData | null;
     deleteKanban: () => void;
     setIsShowConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function DeleteConfirmation({ target, deleteKanban, setIsShowConfirmationModal }: DeleteConfirmProps) {
+export function DeleteConfirmation({
+    target,
+    deleteKanban,
+    setIsShowConfirmationModal,
+}: DeleteConfirmProps) {
     return (
         <div className="p-6 text-center">
             <svg
@@ -26,7 +30,7 @@ export function DeleteConfirmation({ target, deleteKanban, setIsShowConfirmation
                 ></path>
             </svg>
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                {`Вы уверены, что хотите удалить доску ${target?.data().name}?`}
+                {`Вы уверены, что хотите удалить доску ${target?.name}?`}
             </h3>
             <button
                 onClick={() => deleteKanban()}

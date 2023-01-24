@@ -23,7 +23,10 @@ export default function RegisterForm() {
         setLoading(true);
         try {
             if (emailRef.current && passwordRef.current && usernameRef.current) {
-                const userCredential = await signup(emailRef.current.value, passwordRef.current.value);
+                const userCredential = await signup(
+                    emailRef.current.value,
+                    passwordRef.current.value
+                );
                 await updateProfileName(usernameRef.current.value);
                 // Add user to firestore
                 await UserService.addUserToFirestore(
@@ -34,7 +37,8 @@ export default function RegisterForm() {
                 navigate("/");
             }
         } catch (error: any) {
-            if (error.code === "auth/weak-password") setError("Пароль слишком короткий. Минимум 6 символов");
+            if (error.code === "auth/weak-password")
+                setError("Пароль слишком короткий. Минимум 6 символов");
             else if (error.code === "auth/email-already-in-use") setError("Почта уже используется");
             else setError("Ошибка при создании аккаунта");
         }
@@ -142,7 +146,10 @@ export default function RegisterForm() {
                             </span>
                             Зарегистрироваться
                             {loading && (
-                                <span className="absolute right-0 pr-3 flex items-center" role="status">
+                                <span
+                                    className="absolute right-0 pr-3 flex items-center"
+                                    role="status"
+                                >
                                     <svg
                                         aria-hidden="true"
                                         className="w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"

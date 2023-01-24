@@ -1,4 +1,3 @@
-import React from "react";
 import { PropsWithChildren } from "../../types";
 
 interface ModalProps extends PropsWithChildren {

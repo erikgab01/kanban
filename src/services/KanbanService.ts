@@ -1,15 +1,32 @@
-import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+    addDoc,
+    arrayRemove,
+    arrayUnion,
+    collection,
+    deleteDoc,
+    doc,
+    getDoc,
+    onSnapshot,
+    query,
+    Unsubscribe,
+    updateDoc,
+    where,
+} from "firebase/firestore";
 import { auth, db } from "../firebase";
 import kanban_setup from "../kanban_setup";
 import { KanbanData } from "../types";
+import { KanbanStructure } from "./../types";
 
-//TODO: Make a more generic interface for kanbans (without firebase docs)
 export default class KanbanService {
     static async getKanbanData(kanbanId: string): Promise<KanbanData | null> {
         try {
             const docSnap = await getDoc(doc(db, "kanbans", kanbanId));
             if (docSnap.exists()) {
-                return docSnap.data() as KanbanData;
+                const kanbanData = {
+                    id: docSnap.id,
+                    ...docSnap.data(),
+                } as KanbanData;
+                return kanbanData;
             }
             return null;
         } catch (error) {
@@ -46,11 +63,22 @@ export default class KanbanService {
         await deleteDoc(doc(db, "kanbans", kanbanId));
     }
 
-    static async updateKanbanInfo(kanbanId: string, newName: string, newDesc: string): Promise<void> {
+    static async updateKanbanInfo(
+        kanbanId: string,
+        newName: string,
+        newDesc: string
+    ): Promise<void> {
         const kanbanRef = doc(db, "kanbans", kanbanId);
         await updateDoc(kanbanRef, {
             name: newName,
             description: newDesc,
+        });
+    }
+
+    static async addCollaborator(kanbanId: string, userId: string): Promise<void> {
+        const kanbanRef = doc(db, "kanbans", kanbanId);
+        await updateDoc(kanbanRef, {
+            collaborators: arrayUnion(userId),
         });
     }
 
@@ -59,5 +87,48 @@ export default class KanbanService {
         await updateDoc(kanbanRef, {
             collaborators: arrayRemove(userId),
         });
+    }
+
+    static setKanbanListener(
+        kanbanId: string,
+        callback: (value: KanbanStructure[]) => void
+    ): Unsubscribe {
+        const unsubscribe = onSnapshot(doc(db, "kanbans", kanbanId), (doc) => {
+            callback(JSON.parse(doc.data()?.kanban));
+        });
+        return unsubscribe;
+    }
+
+    static setHostKanbansListener(
+        callback: (value: KanbanData[]) => void,
+        loadingCallback: (value: boolean) => void
+    ): Unsubscribe {
+        const q = query(collection(db, "kanbans"), where("host", "==", auth.currentUser?.uid));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            loadingCallback(false);
+            const kanbanData = querySnapshot.docs.map((doc) => {
+                return { id: doc.id, ...doc.data() } as KanbanData;
+            });
+            callback(kanbanData);
+        });
+        return unsubscribe;
+    }
+
+    static setCollabKanbansListener(
+        callback: (value: KanbanData[]) => void,
+        loadingCallback: (value: boolean) => void
+    ): Unsubscribe {
+        const q = query(
+            collection(db, "kanbans"),
+            where("collaborators", "array-contains", auth.currentUser?.uid)
+        );
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            loadingCallback(false);
+            const kanbanData = querySnapshot.docs.map((doc) => {
+                return { id: doc.id, ...doc.data() } as KanbanData;
+            });
+            callback(kanbanData);
+        });
+        return unsubscribe;
     }
 }

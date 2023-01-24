@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { ContextMenuOption, KanbanDoc } from "../types";
+import { ContextMenuOption } from "../types";
+import { KanbanData } from "./../types";
 
 const useContextMenu = () => {
     const [clicked, setClicked] = useState(false);
-    const [contextMenuTarget, setContextMenuTarget] = useState<KanbanDoc | null>(null);
+    const [contextMenuTarget, setContextMenuTarget] = useState<KanbanData | null>(null);
     const [contextMenuOptions, setContextMenuOptions] = useState<ContextMenuOption[]>([]);
     const [points, setPoints] = useState({
         x: 0,

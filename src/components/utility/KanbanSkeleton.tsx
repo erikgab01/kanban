@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function KanbanSkeleton() {
     return (
         <div className="w-60 h-28 mx-auto border-2 rounded-lg bg-white shadow-md">

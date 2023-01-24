@@ -4,13 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "./utility/Modal";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { db, auth } from "../firebase";
+import { auth } from "../firebase";
 import useContextMenu from "../hooks/useContextMenu";
 import ContextMenu from "./utility/ContextMenu";
-import { ContextMenuOption, KanbanDoc } from "../types";
+import { ContextMenuOption } from "../types";
 import KanbanSkeleton from "./utility/KanbanSkeleton";
 import KanbanService from "../services/KanbanService";
+import { KanbanData } from "./../types";
 
 export default function Dashboard() {
     // TODO: decompose
@@ -19,8 +19,8 @@ export default function Dashboard() {
     const [isShowCreateModal, setIsShowCreateModal] = useState(false);
     const [isShowEditModal, setIsShowEditModal] = useState(false);
     const [isShowConfirmationModal, setIsShowConfirmationModal] = useState(false);
-    const [kanbanHostList, setKanbanHostList] = useState<KanbanDoc[]>([]);
-    const [kanbanCollabList, setKanbanCollabList] = useState<KanbanDoc[]>([]);
+    const [kanbanHostList, setKanbanHostList] = useState<KanbanData[]>([]);
+    const [kanbanCollabList, setKanbanCollabList] = useState<KanbanData[]>([]);
     const navigate = useNavigate();
     const {
         clicked,
@@ -58,7 +58,11 @@ export default function Dashboard() {
         }
     }
 
-    function handleContextMenu(e: React.MouseEvent, kanban: KanbanDoc, options: ContextMenuOption[]) {
+    function handleContextMenu(
+        e: React.MouseEvent,
+        kanban: KanbanData,
+        options: ContextMenuOption[]
+    ) {
         e.preventDefault();
         setContextMenuOptions(options);
         setClicked(true);
@@ -71,19 +75,14 @@ export default function Dashboard() {
 
     // Realtime listening to db changes
     useEffect(() => {
-        const q1 = query(collection(db, "kanbans"), where("host", "==", auth.currentUser?.uid));
-        const q2 = query(
-            collection(db, "kanbans"),
-            where("collaborators", "array-contains", auth.currentUser?.uid)
+        const unsubscribe1 = KanbanService.setHostKanbansListener(
+            setKanbanHostList,
+            setIsLoadingHostKanbans
         );
-        const unsubscribe1 = onSnapshot(q1, (querySnapshot) => {
-            setIsLoadingHostKanbans(false);
-            setKanbanHostList(querySnapshot.docs as unknown as KanbanDoc[]);
-        });
-        const unsubscribe2 = onSnapshot(q2, (querySnapshot) => {
-            setIsLoadingCollabKanbans(false);
-            setKanbanCollabList(querySnapshot.docs as unknown as KanbanDoc[]);
-        });
+        const unsubscribe2 = KanbanService.setCollabKanbansListener(
+            setKanbanCollabList,
+            setIsLoadingCollabKanbans
+        );
         return () => {
             unsubscribe1();
             unsubscribe2();
@@ -110,16 +109,22 @@ export default function Dashboard() {
                                 className="w-60 h-28 p-6 text-center bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                                 onContextMenu={(e) =>
                                     handleContextMenu(e, kanban, [
-                                        { name: "Редактировать", handler: () => setIsShowEditModal(true) },
-                                        { name: "Удалить", handler: () => setIsShowConfirmationModal(true) },
+                                        {
+                                            name: "Редактировать",
+                                            handler: () => setIsShowEditModal(true),
+                                        },
+                                        {
+                                            name: "Удалить",
+                                            handler: () => setIsShowConfirmationModal(true),
+                                        },
                                     ])
                                 }
                             >
                                 <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
-                                    {kanban.data().name}
+                                    {kanban.name}
                                 </h5>
                                 <p className="font-normal truncate text-sm text-gray-700 dark:text-gray-400">
-                                    {kanban.data().description}
+                                    {kanban.description}
                                 </p>
                             </Link>
                         ))}
@@ -156,10 +161,10 @@ export default function Dashboard() {
                             }
                         >
                             <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
-                                {kanban.data().name}
+                                {kanban.name}
                             </h5>
                             <p className="font-normal truncate text-sm text-gray-700 dark:text-gray-400">
-                                {kanban.data().description}
+                                {kanban.description}
                             </p>
                         </Link>
                     ))
@@ -179,8 +184,8 @@ export default function Dashboard() {
                     handler={handleEditKanban}
                     formTitle={"Редактировать доску"}
                     buttonText={"Редактировать"}
-                    initialName={contextMenuTarget?.data().name}
-                    initialDesc={contextMenuTarget?.data().description}
+                    initialName={contextMenuTarget?.name}
+                    initialDesc={contextMenuTarget?.description}
                 />
             </Modal>
             {/* Delete confirmation modal */}

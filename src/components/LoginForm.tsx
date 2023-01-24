@@ -20,7 +20,11 @@ export default function LoginForm() {
         setLoading(true);
         try {
             if (emailRef.current && passwordRef.current && remember.current) {
-                await login(emailRef.current.value, passwordRef.current.value, remember.current.checked);
+                await login(
+                    emailRef.current.value,
+                    passwordRef.current.value,
+                    remember.current.checked
+                );
                 navigate(from, { replace: true });
             }
         } catch {
@@ -89,7 +93,10 @@ export default function LoginForm() {
                                 ref={remember}
                                 className="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-600"
                             />
-                            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                            <label
+                                htmlFor="remember-me"
+                                className="ml-2 block text-sm text-gray-900"
+                            >
                                 Запомнить меня
                             </label>
                         </div>
@@ -124,7 +131,10 @@ export default function LoginForm() {
                             </span>
                             Войти
                             {loading && (
-                                <span className="absolute right-0 pr-3 flex items-center" role="status">
+                                <span
+                                    className="absolute right-0 pr-3 flex items-center"
+                                    role="status"
+                                >
                                     <svg
                                         aria-hidden="true"
                                         className="w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"

@@ -1,4 +1,3 @@
-import React from "react";
 import { ContextMenuOption } from "../../types";
 
 interface ContextMenuProps {

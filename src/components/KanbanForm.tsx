@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 
 interface KanbanFormProps {
     handler: (name: string, desc: string) => void;

@@ -6,7 +6,7 @@ export interface KanbanStructure {
 }
 
 export interface UserData {
-    id: string;
+    userId: string;
     username: string;
     email: string;
 }

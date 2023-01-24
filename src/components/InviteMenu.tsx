@@ -24,8 +24,8 @@ export default function InviteMenu({ kanbanId }: InviteMenuProps) {
                 return;
             }
             const isHost = kanban.host === auth.currentUser?.uid;
-            const invitedUserIsHost = kanban.host === newUser.id;
-            const invitedUserIsAlreadyCollaborator = kanban.collaborators.includes(newUser.id);
+            const invitedUserIsHost = kanban.host === newUser.userId;
+            const invitedUserIsAlreadyCollaborator = kanban.collaborators.includes(newUser.userId);
             if (!isHost) {
                 console.log("You are not a host");
                 return;
@@ -34,7 +34,7 @@ export default function InviteMenu({ kanbanId }: InviteMenuProps) {
                 console.log("User is already invited to this kanban");
                 return;
             }
-            KanbanService.addCollaborator(kanbanId, newUser.id);
+            KanbanService.addCollaborator(kanbanId, newUser.userId);
             console.log("User invited");
         } catch (error) {
             console.error("Error inviting a user: ", error);

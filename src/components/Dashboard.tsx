@@ -1,7 +1,7 @@
 import { DeleteConfirmation } from "./DeleteConfirmation";
 import { KanbanForm } from "./KanbanForm";
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "./utility/Modal";
 import { auth } from "../firebase";
@@ -11,9 +11,9 @@ import { ContextMenuOption } from "../types";
 import KanbanSkeleton from "./utility/KanbanSkeleton";
 import KanbanService from "../services/KanbanService";
 import { KanbanData } from "./../types";
+import KanbanCard from "./KanbanCard";
 
 export default function Dashboard() {
-    // TODO: decompose
     const [isLoadingHostKanbans, setIsLoadingHostKanbans] = useState(true);
     const [isLoadingCollabKanbans, setIsLoadingCollabKanbans] = useState(true);
     const [isShowCreateModal, setIsShowCreateModal] = useState(false);
@@ -103,11 +103,10 @@ export default function Dashboard() {
                 ) : (
                     <>
                         {kanbanHostList.map((kanban) => (
-                            <Link
+                            <KanbanCard
                                 key={kanban.id}
-                                to={`/kanban/${kanban.id}`}
-                                className="w-60 h-28 p-6 text-center bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                                onContextMenu={(e) =>
+                                kanban={kanban}
+                                contextMenuHandler={(e) =>
                                     handleContextMenu(e, kanban, [
                                         {
                                             name: "Редактировать",
@@ -119,14 +118,7 @@ export default function Dashboard() {
                                         },
                                     ])
                                 }
-                            >
-                                <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
-                                    {kanban.name}
-                                </h5>
-                                <p className="font-normal truncate text-sm text-gray-700 dark:text-gray-400">
-                                    {kanban.description}
-                                </p>
-                            </Link>
+                            />
                         ))}
                         <button
                             className="w-60 h-28 p-6 text-2xl bg-white border border-dashed border-gray-600 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
@@ -150,23 +142,18 @@ export default function Dashboard() {
                     </>
                 ) : (
                     kanbanCollabList.map((kanban) => (
-                        <Link
+                        <KanbanCard
                             key={kanban.id}
-                            to={`/kanban/${kanban.id}`}
-                            className="w-60 h-28 p-6 text-center bg-white border border-yellow-400 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                            onContextMenu={(e) =>
+                            kanban={kanban}
+                            contextMenuHandler={(e) =>
                                 handleContextMenu(e, kanban, [
-                                    { name: "Покинуть", handler: () => handleLeaveCollabKanban() },
+                                    {
+                                        name: "Покинуть",
+                                        handler: () => handleLeaveCollabKanban(),
+                                    },
                                 ])
                             }
-                        >
-                            <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">
-                                {kanban.name}
-                            </h5>
-                            <p className="font-normal truncate text-sm text-gray-700 dark:text-gray-400">
-                                {kanban.description}
-                            </p>
-                        </Link>
+                        />
                     ))
                 )}
             </div>

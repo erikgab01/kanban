@@ -94,6 +94,13 @@ export default class KanbanService {
         callback: (value: KanbanStructure[]) => void
     ): Unsubscribe {
         const unsubscribe = onSnapshot(doc(db, "kanbans", kanbanId), (doc) => {
+            // Listener is invoked even on local changes
+            // State is changed twice(here and in kanban component), and data saved to db twice
+            // So we will ignore local changes, only handle server changes
+            const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+            if (source === "Local") {
+                return;
+            }
             callback(JSON.parse(doc.data()?.kanban));
         });
         return unsubscribe;

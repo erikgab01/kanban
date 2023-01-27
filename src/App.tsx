@@ -7,6 +7,7 @@ import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import { AuthProvider } from "./Contexts/AuthContext";
 import PrivateRoute from "./components/utility/PrivateRoute";
+import KanbanService from "./services/KanbanService";
 
 library.add(fas);
 
@@ -19,6 +20,9 @@ const router = createBrowserRouter([
     },
     {
         path: "/kanban/:kanbanId",
+        loader: async ({ params }) => {
+            return KanbanService.getKanbanData(params.kanbanId!);
+        },
         element: (
             <PrivateRoute>
                 <KanbanPage />

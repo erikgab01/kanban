@@ -9,7 +9,6 @@ interface InviteMenuProps {
 }
 
 export default function InviteMenu({ kanbanId }: InviteMenuProps) {
-    // TODO: display errors and success messages
     const [email, setEmail] = useState("");
     async function inviteUser(e: React.FormEvent) {
         e.preventDefault();

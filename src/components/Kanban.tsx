@@ -43,6 +43,7 @@ export default function Kanban() {
         return unsub;
     }, [kanbanId]);
 
+    //TODO: move loading spinner to component
     return loading ? (
         <div className="text-center mt-40">
             <div role="status">

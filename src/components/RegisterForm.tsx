@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import UserService from "../services/UserService";
+import LoadingSpinner from "./utility/LoadingSpinner";
 
 export default function RegisterForm() {
     const usernameRef = useRef<HTMLInputElement>(null);
@@ -146,11 +147,11 @@ export default function RegisterForm() {
                             </span>
                             Зарегистрироваться
                             {loading && (
-                                <span
-                                    className="absolute right-0 pr-3 flex items-center"
-                                    role="status"
-                                >
-                                    <svg
+                                <span className="absolute right-0 pr-3 flex items-center">
+                                    <span className="w-4 h-4">
+                                        <LoadingSpinner />
+                                    </span>
+                                    {/* <svg
                                         aria-hidden="true"
                                         className="w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                                         viewBox="0 0 100 101"
@@ -166,7 +167,7 @@ export default function RegisterForm() {
                                             fill="currentFill"
                                         />
                                     </svg>
-                                    <span className="sr-only">Loading...</span>
+                                    <span className="sr-only">Loading...</span> */}
                                 </span>
                             )}
                         </button>

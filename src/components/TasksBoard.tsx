@@ -76,7 +76,7 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
                     const textColor =
                         r * 0.299 + g * 0.587 + b * 0.114 > 186 ? "#000000" : "#ffffff";
                     return (
-                        <div key={groupI} className="flex flex-col min-w-[240px]">
+                        <div key={groupI} className="flex flex-col flex-1">
                             <h6
                                 style={{ background: group.color, color: textColor }}
                                 className="py-3 px-4 self-start rounded-md"

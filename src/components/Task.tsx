@@ -13,14 +13,14 @@ interface TaskProps {
     setGroups: React.Dispatch<React.SetStateAction<KanbanStructure[]>>;
 }
 
-// TODO: Move groups to context
 export default function Task({ task, taskI, groupI, color, groups, setGroups }: TaskProps) {
     const [isEditing, setIsEditing] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     // Autoresize textarea
     useEffect(() => {
         if (textareaRef.current) {
-            textareaRef.current.style.height = "0px";
+            // TODO: figure out why this is needed
+            //textareaRef.current.style.height = "0px";
             const scrollHeight = textareaRef.current.scrollHeight;
             textareaRef.current.style.height = scrollHeight + "px";
             //console.log(textareaRef);

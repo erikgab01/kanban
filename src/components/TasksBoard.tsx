@@ -17,8 +17,8 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
         if (!destination) {
             return;
         }
-        const sInd = source.droppableId as unknown as number;
-        const dInd = destination.droppableId as unknown as number;
+        const sInd = parseInt(source.droppableId);
+        const dInd = parseInt(destination.droppableId);
 
         if (sInd === dInd) {
             const items = reorder(groups[sInd].tasks, source.index, destination.index);

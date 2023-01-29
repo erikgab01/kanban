@@ -1,8 +1,8 @@
 import { Navigate, useLoaderData, useLocation } from "react-router-dom";
-import { auth } from "../../firebase";
-import { PropsWithChildren } from "../../types";
+import { auth } from "../firebase";
+import { PropsWithChildren } from "../types";
 import { toast } from "react-toastify";
-import { KanbanData } from "./../../types";
+import { KanbanData } from "../types";
 
 export default function PrivateRoute({ children }: PropsWithChildren) {
     const location = useLocation();

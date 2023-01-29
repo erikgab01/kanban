@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { auth } from "../firebase";
-import KanbanService from "./../services/KanbanService";
-import UserService from "./../services/UserService";
+import { auth } from "../../firebase";
+import KanbanService from "../../services/KanbanService";
+import UserService from "../../services/UserService";
 import { toast } from "react-toastify";
 
 interface InviteMenuProps {

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { KanbanStructure, TaskData } from "./../types";
+import { KanbanStructure, TaskData } from "../../types";
 
 interface TaskProps {
     task: TaskData;

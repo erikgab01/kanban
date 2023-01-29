@@ -1,7 +1,7 @@
 import React from "react";
 import { DragDropContext, Droppable, DropResult, DraggableLocation } from "react-beautiful-dnd";
-import { KanbanStructure } from "../types";
-import { hexToRgb } from "../utility";
+import { KanbanStructure } from "../../types";
+import { hexToRgb } from "../../utility";
 import Task from "./Task";
 
 interface TasksBoardProps {

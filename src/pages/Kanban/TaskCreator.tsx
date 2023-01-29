@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { nanoid } from "nanoid";
-import { KanbanStructure } from "../types";
+import { KanbanStructure } from "../../types";
 
 interface TaskCreatorProps {
     setGroups: React.Dispatch<React.SetStateAction<KanbanStructure[]>>;

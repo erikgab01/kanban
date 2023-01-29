@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { KanbanData } from "./../types";
+import { KanbanData } from "../../types";
 
 interface KanbanCardProps {
     kanban: KanbanData;

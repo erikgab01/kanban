@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function Home() {
+export default function Welcome() {
     return (
         <div className="flex flex-col gap-4 min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <h1 className="font-medium text-lg text-center">Добро пожаловать</h1>

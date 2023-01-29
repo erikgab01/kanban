@@ -1,16 +1,16 @@
-import { DeleteConfirmation } from "./DeleteConfirmation";
+import { DeleteConfirmation } from "../../components/ui/DeleteConfirmation";
 import { KanbanForm } from "./KanbanForm";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Modal from "./utility/Modal";
-import { auth } from "../firebase";
-import useContextMenu from "../hooks/useContextMenu";
-import ContextMenu from "./utility/ContextMenu";
-import { ContextMenuOption } from "../types";
-import KanbanSkeleton from "./utility/KanbanSkeleton";
-import KanbanService from "../services/KanbanService";
-import { KanbanData } from "./../types";
+import Modal from "../../components/ui/Modal";
+import { auth } from "../../firebase";
+import useContextMenu from "../../hooks/useContextMenu";
+import ContextMenu from "../../components/ui/ContextMenu";
+import { ContextMenuOption } from "../../types";
+import KanbanSkeleton from "./KanbanSkeleton";
+import KanbanService from "../../services/KanbanService";
+import { KanbanData } from "../../types";
 import KanbanCard from "./KanbanCard";
 
 export default function Dashboard() {

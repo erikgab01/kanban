@@ -1,13 +1,13 @@
-import LoadingSpinner from "./utility/LoadingSpinner";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { useState, useEffect } from "react";
 import TaskCreator from "./TaskCreator";
 import TasksBoard from "./TasksBoard";
-import { auth } from "../firebase";
-import useDebounce from "../hooks/useDebounce";
+import { auth } from "../../firebase";
+import useDebounce from "../../hooks/useDebounce";
 import { useParams } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
-import { KanbanStructure } from "../types";
-import KanbanService from "../services/KanbanService";
+import { KanbanStructure } from "../../types";
+import KanbanService from "../../services/KanbanService";
 
 export default function Kanban() {
     const [groups, setGroups] = useState<KanbanStructure[]>([]);

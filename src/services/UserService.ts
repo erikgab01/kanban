@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { setDoc, doc, collection, getDocs, query, where, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { UserData } from "../types";
 
@@ -8,8 +8,7 @@ export default class UserService {
         displayName: string,
         email: string
     ): Promise<void> {
-        await addDoc(collection(db, "users"), {
-            userId: uid,
+        await setDoc(doc(db, "users", uid), {
             username: displayName,
             email: email,
         });
@@ -17,12 +16,24 @@ export default class UserService {
 
     static async getUserByEmail(email: string): Promise<UserData | null> {
         const q = query(collection(db, "users"), where("email", "==", email));
-        const userRef = await getDocs(q);
-        if (userRef.docs.length === 0) {
+        const userSnap = await getDocs(q);
+        if (userSnap.docs.length === 0) {
             console.log("User not found");
             return null;
         }
-        const newUser = userRef.docs[0].data() as UserData;
-        return newUser;
+        const user = { userId: userSnap.docs[0].id, ...userSnap.docs[0].data() } as UserData;
+        return user;
+    }
+
+    static async getUserById(id: string): Promise<UserData | null> {
+        const userSnap = await getDoc(doc(db, "users", id));
+        if (userSnap.exists()) {
+            console.log("Document data:", userSnap.data());
+            const user = { userId: userSnap.id, ...userSnap.data() } as UserData;
+            return user;
+        } else {
+            console.log("No such document!");
+            return null;
+        }
     }
 }

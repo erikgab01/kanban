@@ -8,13 +8,20 @@ import { useParams } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
 import { KanbanStructure } from "../../types";
 import KanbanService from "../../services/KanbanService";
+import Modal from "../../components/ui/Modal";
+import CollabList from "./CollabList";
+
+type KanbanParams = {
+    kanbanId: string;
+};
 
 export default function Kanban() {
     const [groups, setGroups] = useState<KanbanStructure[]>([]);
     const [loading, setLoading] = useState(true);
     const [isHost, setIsHost] = useState(false);
-    const debouncedGroups = useDebounce(groups, 1000);
-    const { kanbanId } = useParams();
+    const [isShow, setIsShow] = useState(false);
+    const debouncedGroups = useDebounce<KanbanStructure[]>(groups, 1000);
+    const { kanbanId } = useParams<KanbanParams>();
 
     //TODO: improve design, make separators for columns in kanban, a tick to move to "done", rename columns
     //TODO: delete collaborators
@@ -55,8 +62,12 @@ export default function Kanban() {
             <div className="flex gap-8">
                 <TaskCreator setGroups={setGroups} />
                 {isHost && <InviteMenu kanbanId={kanbanId!} />}
+                <button onClick={() => setIsShow(true)}>Показать список коллабораторов</button>
             </div>
             <TasksBoard groups={groups} setGroups={setGroups} />
+            <Modal isShow={isShow} setIsShow={setIsShow}>
+                <CollabList kanbanId={kanbanId!} />
+            </Modal>
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, PropsWithChildren } from "react";
 import { auth } from "../firebase";
 import {
     onAuthStateChanged,
@@ -12,7 +12,6 @@ import {
     User,
     UserCredential,
 } from "firebase/auth";
-import { PropsWithChildren } from "../types";
 
 interface CurrentUserContextType {
     currentUser: User | null;

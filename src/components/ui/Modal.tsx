@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "../../types";
+import { PropsWithChildren } from "react";
 
 interface ModalProps extends PropsWithChildren {
     isShow: boolean;

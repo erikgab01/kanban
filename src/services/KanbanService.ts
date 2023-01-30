@@ -15,7 +15,6 @@ import {
 import { auth, db } from "../firebase";
 import kanban_setup from "../kanban_setup";
 import { KanbanData } from "../types";
-import { KanbanStructure } from "./../types";
 
 export default class KanbanService {
     static async getKanbanData(kanbanId: string): Promise<KanbanData | null> {
@@ -89,10 +88,7 @@ export default class KanbanService {
         });
     }
 
-    static setKanbanListener(
-        kanbanId: string,
-        callback: (value: KanbanStructure[]) => void
-    ): Unsubscribe {
+    static setKanbanListener(kanbanId: string, callback: (value: KanbanData) => void): Unsubscribe {
         const unsubscribe = onSnapshot(doc(db, "kanbans", kanbanId), (doc) => {
             // Listener is invoked even on local changes
             // State is changed twice(here and in kanban component), and data saved to db twice
@@ -101,11 +97,13 @@ export default class KanbanService {
             if (source === "Local") {
                 return;
             }
-            callback(JSON.parse(doc.data()?.kanban));
+            console.log("listener");
+            callback(doc.data() as KanbanData);
         });
         return unsubscribe;
     }
 
+    // TODO: remove loading callbacks
     static setHostKanbansListener(
         callback: (value: KanbanData[]) => void,
         loadingCallback: (value: boolean) => void

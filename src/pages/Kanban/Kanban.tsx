@@ -47,7 +47,9 @@ export default function Kanban() {
 
     // Realtime listening to db changes
     useEffect(() => {
-        const unsub = KanbanService.setKanbanListener(kanbanId!, setGroups);
+        const unsub = KanbanService.setKanbanListener(kanbanId!, (kanbanData) => {
+            setGroups(JSON.parse(kanbanData.kanban));
+        });
         return unsub;
     }, [kanbanId]);
 
@@ -66,7 +68,7 @@ export default function Kanban() {
             </div>
             <TasksBoard groups={groups} setGroups={setGroups} />
             <Modal isShow={isShow} setIsShow={setIsShow}>
-                <CollabList kanbanId={kanbanId!} />
+                <CollabList kanbanId={kanbanId!} isHost={isHost} />
             </Modal>
         </div>
     );

@@ -21,15 +21,17 @@ export default function Kanban() {
     const [isHost, setIsHost] = useState(false);
     const [isShow, setIsShow] = useState(false);
     const debouncedGroups = useDebounce<KanbanStructure[]>(groups, 1000);
-    const { kanbanId } = useParams<KanbanParams>();
+
+    // Kanban id is always present, but typescript doesn't know that
+    // Either use ! or cast it to kanbanParams
+    const { kanbanId } = useParams() as KanbanParams;
 
     //TODO: improve design, make separators for columns in kanban, a tick to move to "done", rename columns
-    //TODO: delete collaborators
 
     //Read from db
     useEffect(() => {
         (async () => {
-            const kanbanData = await KanbanService.getKanbanData(kanbanId!);
+            const kanbanData = await KanbanService.getKanbanData(kanbanId);
             if (kanbanData) {
                 setGroups(JSON.parse(kanbanData.kanban));
                 setIsHost(kanbanData.host === auth.currentUser?.uid);
@@ -41,13 +43,13 @@ export default function Kanban() {
     // Write to db
     useEffect(() => {
         if (debouncedGroups.length > 0) {
-            KanbanService.updateKanbanData(kanbanId!, debouncedGroups);
+            KanbanService.updateKanbanData(kanbanId, debouncedGroups);
         }
     }, [debouncedGroups, kanbanId]);
 
     // Realtime listening to db changes
     useEffect(() => {
-        const unsub = KanbanService.setKanbanListener(kanbanId!, (kanbanData) => {
+        const unsub = KanbanService.setKanbanListener(kanbanId, (kanbanData) => {
             setGroups(JSON.parse(kanbanData.kanban));
         });
         return unsub;
@@ -63,12 +65,12 @@ export default function Kanban() {
         <div className="container mx-auto">
             <div className="flex gap-8">
                 <TaskCreator setGroups={setGroups} />
-                {isHost && <InviteMenu kanbanId={kanbanId!} />}
+                {isHost && <InviteMenu kanbanId={kanbanId} />}
                 <button onClick={() => setIsShow(true)}>Показать список коллабораторов</button>
             </div>
             <TasksBoard groups={groups} setGroups={setGroups} />
             <Modal isShow={isShow} setIsShow={setIsShow}>
-                <CollabList kanbanId={kanbanId!} isHost={isHost} />
+                <CollabList kanbanId={kanbanId} isHost={isHost} />
             </Modal>
         </div>
     );

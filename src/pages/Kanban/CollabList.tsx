@@ -30,6 +30,7 @@ export default function CollabList({ kanbanId, isHost }: CollabListProps) {
     }, [kanbanId]);
 
     //TODO: need to redirect to home page after deleting collab
+    //TODO: improve styles
     function removeCollaborator(id: string) {
         if (isHost) {
             KanbanService.removeCollaborator(kanbanId, id);

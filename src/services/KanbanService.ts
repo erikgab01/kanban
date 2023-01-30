@@ -104,13 +104,9 @@ export default class KanbanService {
     }
 
     // TODO: remove loading callbacks
-    static setHostKanbansListener(
-        callback: (value: KanbanData[]) => void,
-        loadingCallback: (value: boolean) => void
-    ): Unsubscribe {
+    static setHostKanbansListener(callback: (value: KanbanData[]) => void): Unsubscribe {
         const q = query(collection(db, "kanbans"), where("host", "==", auth.currentUser?.uid));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            loadingCallback(false);
             const kanbanData = querySnapshot.docs.map((doc) => {
                 return { id: doc.id, ...doc.data() } as KanbanData;
             });
@@ -119,16 +115,12 @@ export default class KanbanService {
         return unsubscribe;
     }
 
-    static setCollabKanbansListener(
-        callback: (value: KanbanData[]) => void,
-        loadingCallback: (value: boolean) => void
-    ): Unsubscribe {
+    static setCollabKanbansListener(callback: (value: KanbanData[]) => void): Unsubscribe {
         const q = query(
             collection(db, "kanbans"),
             where("collaborators", "array-contains", auth.currentUser?.uid)
         );
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            loadingCallback(false);
             const kanbanData = querySnapshot.docs.map((doc) => {
                 return { id: doc.id, ...doc.data() } as KanbanData;
             });

@@ -75,14 +75,14 @@ export default function Dashboard() {
 
     // Realtime listening to db changes
     useEffect(() => {
-        const unsubscribe1 = KanbanService.setHostKanbansListener(
-            setKanbanHostList,
-            setIsLoadingHostKanbans
-        );
-        const unsubscribe2 = KanbanService.setCollabKanbansListener(
-            setKanbanCollabList,
-            setIsLoadingCollabKanbans
-        );
+        const unsubscribe1 = KanbanService.setHostKanbansListener((kanbans) => {
+            setKanbanHostList(kanbans);
+            setIsLoadingHostKanbans(false);
+        });
+        const unsubscribe2 = KanbanService.setCollabKanbansListener((kanbans) => {
+            setKanbanCollabList(kanbans);
+            setIsLoadingCollabKanbans(false);
+        });
         return () => {
             unsubscribe1();
             unsubscribe2();

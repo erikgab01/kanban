@@ -2,8 +2,8 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Kanban from "./pages/Kanban";
-import LoginForm from "./pages/Login";
-import RegisterForm from "./pages/Register";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Home from "./pages/Home";
 import { AuthProvider } from "./Contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
@@ -34,11 +34,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "login",
-                element: <LoginForm />,
+                element: <Login />,
             },
             {
                 path: "register",
-                element: <RegisterForm />,
+                element: <Register />,
             },
         ],
     },

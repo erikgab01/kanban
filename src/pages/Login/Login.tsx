@@ -1,47 +1,35 @@
 import React, { useRef, useState } from "react";
 import { useAuth } from "../../Contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
-import UserService from "../../services/UserService";
+import { useNavigate, useLocation } from "react-router-dom";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 
-export default function RegisterForm() {
-    const usernameRef = useRef<HTMLInputElement>(null);
+// TODO: forget password
+export default function Login() {
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
-    const passwordConfirmRef = useRef<HTMLInputElement>(null);
+    const remember = useRef<HTMLInputElement>(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
-    const { signup, updateProfileName } = useAuth();
+    const { login } = useAuth();
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        // TODO: maybe some form validation (react-hook-form), maybe controlled inputs to ease form validation
-        if (passwordRef.current?.value !== passwordConfirmRef.current?.value) {
-            return setError("Пароли не совпадают");
-        }
         setLoading(true);
         try {
-            if (emailRef.current && passwordRef.current && usernameRef.current) {
-                const userCredential = await signup(
+            if (emailRef.current && passwordRef.current && remember.current) {
+                await login(
                     emailRef.current.value,
-                    passwordRef.current.value
+                    passwordRef.current.value,
+                    remember.current.checked
                 );
-                await updateProfileName(usernameRef.current.value);
-                // Add user to firestore
-                await UserService.addUserToFirestore(
-                    userCredential.user.uid,
-                    userCredential.user.displayName!,
-                    userCredential.user.email!
-                );
-                navigate("/");
+                navigate(from, { replace: true });
             }
-        } catch (error: any) {
-            if (error.code === "auth/weak-password")
-                setError("Пароль слишком короткий. Минимум 6 символов");
-            else if (error.code === "auth/email-already-in-use") setError("Почта уже используется");
-            else setError("Ошибка при создании аккаунта");
+        } catch {
+            setError("Неправильный логин или пароль");
         }
         setLoading(false);
     }
@@ -51,12 +39,12 @@ export default function RegisterForm() {
             <div className="w-full max-w-md space-y-8">
                 <div>
                     <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-                        Зарегистрировать аккаунт
+                        Войти в свой аккаунт
                     </h2>
                 </div>
                 {error && (
                     <div
-                        className="p-4 mb-4 text-red-700 bg-red-100 rounded-lg sm:text-sm dark:bg-red-200 dark:text-red-800"
+                        className="p-4 text-red-700 bg-red-100 rounded-lg sm:text-sm dark:bg-red-200 dark:text-red-800"
                         role="alert"
                     >
                         <span className="font-medium">{error}</span>
@@ -65,20 +53,6 @@ export default function RegisterForm() {
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <input type="hidden" name="remember" value="true" />
                     <div className="-space-y-px rounded-md shadow-sm">
-                        <div>
-                            <label htmlFor="username" className="sr-only">
-                                Имя пользователя
-                            </label>
-                            <input
-                                id="username"
-                                name="username"
-                                type="text"
-                                ref={usernameRef}
-                                required
-                                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
-                                placeholder="Имя пользователя"
-                            />
-                        </div>
                         <div>
                             <label htmlFor="email-address" className="sr-only">
                                 Почта
@@ -90,7 +64,7 @@ export default function RegisterForm() {
                                 autoComplete="email"
                                 ref={emailRef}
                                 required
-                                className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
+                                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
                                 placeholder="Почта"
                             />
                         </div>
@@ -102,25 +76,36 @@ export default function RegisterForm() {
                                 id="password"
                                 name="password"
                                 type="password"
+                                autoComplete="current-password"
                                 ref={passwordRef}
                                 required
-                                className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
+                                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
                                 placeholder="Пароль"
                             />
                         </div>
-                        <div>
-                            <label htmlFor="password-confirmation" className="sr-only">
-                                Подтвердите пароль
-                            </label>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center">
                             <input
-                                id="password-confirmation"
-                                name="password-confirmation"
-                                type="password"
-                                ref={passwordConfirmRef}
-                                required
-                                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
-                                placeholder="Подтвердите пароль"
+                                id="remember-me"
+                                name="remember-me"
+                                type="checkbox"
+                                ref={remember}
+                                className="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-600"
                             />
+                            <label
+                                htmlFor="remember-me"
+                                className="ml-2 block text-sm text-gray-900"
+                            >
+                                Запомнить меня
+                            </label>
+                        </div>
+
+                        <div className="text-sm">
+                            <button className="font-medium text-sky-600 hover:text-sky-500">
+                                Забыли пароль?
+                            </button>
                         </div>
                     </div>
 
@@ -145,7 +130,7 @@ export default function RegisterForm() {
                                     />
                                 </svg>
                             </span>
-                            Зарегистрироваться
+                            Войти
                             {loading && (
                                 <span className="absolute right-0 pr-3 flex items-center">
                                     <span className="w-4 h-4">

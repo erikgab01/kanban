@@ -52,7 +52,7 @@ export function KanbanForm({
                         htmlFor="description"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                        Краткое описание
+                        Краткое описание (необязательно)
                     </label>
                     <input
                         type="text"
@@ -62,7 +62,6 @@ export function KanbanForm({
                         placeholder="Для работы над проектом"
                         defaultValue={initialDesc}
                         ref={descRef}
-                        required
                     />
                 </div>
 

@@ -103,7 +103,6 @@ export default class KanbanService {
         return unsubscribe;
     }
 
-    // TODO: remove loading callbacks
     static setHostKanbansListener(callback: (value: KanbanData[]) => void): Unsubscribe {
         const q = query(collection(db, "kanbans"), where("host", "==", auth.currentUser?.uid));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {

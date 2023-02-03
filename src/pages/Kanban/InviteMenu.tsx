@@ -46,6 +46,7 @@ export default function InviteMenu({ kanbanId }: InviteMenuProps) {
             <h4 className="mb-2">Пригласить пользователя</h4>
             <form onSubmit={inviteUser} className="flex justify-between gap-6">
                 <input
+                    maxLength={50}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"

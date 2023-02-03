@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { DragDropContext, Droppable, DropResult, DraggableLocation } from "react-beautiful-dnd";
-import { KanbanStructure } from "../../types";
+import { KanbanStructure, TaskData } from "../../types";
 import { hexToRgb } from "../../utility";
 import Task from "./Task";
 
@@ -10,6 +10,12 @@ interface TasksBoardProps {
 }
 
 export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
+    const [isDragging, setIsDragging] = useState(false);
+
+    function onDragStart() {
+        setIsDragging(true);
+    }
+
     function onDragEnd(result: DropResult) {
         const { source, destination } = result;
 
@@ -33,8 +39,9 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
 
             setGroups(newGroups);
         }
+        setIsDragging(false);
     }
-    function reorder(list: KanbanStructure["tasks"], startIndex: number, endIndex: number) {
+    function reorder(list: TaskData[], startIndex: number, endIndex: number) {
         const result = [...list];
         const [removed] = result.splice(startIndex, 1);
         result.splice(endIndex, 0, removed);
@@ -44,8 +51,8 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
 
     // Moves an item from one list to another list.
     function move(
-        source: KanbanStructure["tasks"],
-        destination: KanbanStructure["tasks"],
+        source: TaskData[],
+        destination: TaskData[],
         droppableSource: DraggableLocation,
         droppableDestination: DraggableLocation
     ) {
@@ -69,7 +76,7 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
         });
     }
     return (
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
             <section className="flex gap-12 mt-8">
                 {groups.map((group, groupI) => {
                     const { r, g, b } = hexToRgb(group.color);
@@ -107,6 +114,7 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
                             </Droppable>
                             {group.isTrashBin && group.tasks.length !== 0 ? (
                                 <button
+                                    disabled={isDragging}
                                     onClick={clearTrashBin}
                                     className="bg-red-600 rounded-lg text-white py-3"
                                 >

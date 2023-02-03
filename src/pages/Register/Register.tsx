@@ -1,51 +1,87 @@
-import React, { useRef, useState } from "react";
+import { useState } from "react";
 import UserService from "../../services/UserService";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { useAuth } from "../../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
 
 export default function Register() {
-    const usernameRef = useRef<HTMLInputElement>(null);
-    const emailRef = useRef<HTMLInputElement>(null);
-    const passwordRef = useRef<HTMLInputElement>(null);
-    const passwordConfirmRef = useRef<HTMLInputElement>(null);
-    const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const { signup, updateProfileName } = useAuth();
 
-    async function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        // TODO: maybe some form validation (formik), maybe controlled inputs to ease form validation
-        if (passwordRef.current?.value !== passwordConfirmRef.current?.value) {
-            return setError("Пароли не совпадают");
-        }
+    const formik = useFormik({
+        initialValues: {
+            username: "",
+            email: "",
+            password: "",
+            passwordConfirm: "",
+        },
+        validationSchema: Yup.object({
+            username: Yup.string()
+                .max(15, "Имя пользователя должно быть меньше 15 символов")
+                .required("Имя пользователя обязательно"),
+            email: Yup.string().email("Неверный формат почты").required("Почта обязательна"),
+            password: Yup.string()
+                .required("Пароль обязателен")
+                .matches(/^\S*$/, "В пароле не может быть пробелов")
+                .matches(/^[\x20-\x7E]+$/, "Пароль должен содержать только латинские символы")
+                .min(8, "Пароль должен быть минимум 8 символов")
+                .matches(/^(?=.*[A-Z])/, "Пароль должен содержать хотя бы одну заглавную букву"),
+            passwordConfirm: Yup.string()
+                .required("Подтвердите пароль")
+                .oneOf([Yup.ref("password"), null], "Пароли должны совпадать"),
+        }),
+        onSubmit: (values) => {
+            handleSubmit(values);
+        },
+    });
+
+    async function handleSubmit(values: typeof formik.values) {
         setLoading(true);
         try {
-            if (emailRef.current && passwordRef.current && usernameRef.current) {
-                const userCredential = await signup(
-                    emailRef.current.value,
-                    passwordRef.current.value
-                );
-                await updateProfileName(usernameRef.current.value);
-                // Add user to firestore
-                await UserService.addUserToFirestore(
-                    userCredential.user.uid,
-                    userCredential.user.displayName!,
-                    userCredential.user.email!
-                );
-                navigate("/");
-            }
+            const userCredential = await signup(values.email, values.password);
+            await updateProfileName(values.username);
+            // Add user to firestore
+            await UserService.addUserToFirestore(
+                userCredential.user.uid,
+                userCredential.user.displayName!,
+                userCredential.user.email!
+            );
+            navigate("/");
         } catch (error: any) {
-            if (error.code === "auth/weak-password")
-                setError("Пароль слишком короткий. Минимум 6 символов");
-            else if (error.code === "auth/email-already-in-use") setError("Почта уже используется");
-            else setError("Ошибка при создании аккаунта");
+            if (error.code === "auth/email-already-in-use") toast.error("Почта уже используется");
+            else toast.error("Ошибка при создании аккаунта");
         }
         setLoading(false);
+    }
+
+    function checkAndDisplayErrors() {
+        const errorsArray = (Object.keys(formik.errors) as Array<keyof typeof formik.errors>).map(
+            (key) => (formik.errors[key] !== "" && formik.touched[key] ? formik.errors[key] : "")
+        );
+        if (errorsArray.filter((error) => error !== "").length === 0) {
+            return null;
+        }
+        return (
+            <div
+                className="p-4 mb-4 text-red-700 bg-red-100 rounded-lg sm:text-sm dark:bg-red-200 dark:text-red-800"
+                role="alert"
+            >
+                <ul>
+                    {errorsArray.map((error) =>
+                        error ? (
+                            <li key={error} className="list-inside list-disc">
+                                {error}
+                            </li>
+                        ) : null
+                    )}
+                </ul>
+            </div>
+        );
     }
 
     return (
@@ -56,74 +92,85 @@ export default function Register() {
                         Зарегистрировать аккаунт
                     </h2>
                 </div>
-                {error && (
-                    <div
-                        className="p-4 mb-4 text-red-700 bg-red-100 rounded-lg sm:text-sm dark:bg-red-200 dark:text-red-800"
-                        role="alert"
-                    >
-                        <span className="font-medium">{error}</span>
-                    </div>
-                )}
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                {checkAndDisplayErrors()}
+                <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
                     <input type="hidden" name="remember" value="true" />
-                    <div className="-space-y-px rounded-md shadow-sm">
-                        <div>
-                            <label htmlFor="username" className="sr-only">
-                                Имя пользователя
-                            </label>
-                            <input
-                                id="username"
-                                name="username"
-                                type="text"
-                                ref={usernameRef}
-                                required
-                                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
-                                placeholder="Имя пользователя"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="email-address" className="sr-only">
-                                Почта
-                            </label>
-                            <input
-                                id="email-address"
-                                name="email"
-                                type="email"
-                                autoComplete="email"
-                                ref={emailRef}
-                                required
-                                className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
-                                placeholder="Почта"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password" className="sr-only">
-                                Пароль
-                            </label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                ref={passwordRef}
-                                required
-                                className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
-                                placeholder="Пароль"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password-confirmation" className="sr-only">
-                                Подтвердите пароль
-                            </label>
-                            <input
-                                id="password-confirmation"
-                                name="password-confirmation"
-                                type="password"
-                                ref={passwordConfirmRef}
-                                required
-                                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-sky-600 focus:outline-none focus:ring-sky-600 sm:text-sm"
-                                placeholder="Подтвердите пароль"
-                            />
-                        </div>
+
+                    <div className="relative mb-6">
+                        <input
+                            type="text"
+                            id="username"
+                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
+                                formik.errors.username && formik.touched.username
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                            }`}
+                            placeholder=" "
+                            {...formik.getFieldProps("username")}
+                        />
+                        <label
+                            htmlFor="username"
+                            className={`absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
+                                formik.errors.username && formik.touched.username
+                                    ? "text-red-500"
+                                    : "text-gray-500"
+                            }`}
+                        >
+                            Имя пользователя
+                        </label>
+                    </div>
+                    <div className="relative mb-6">
+                        <input
+                            type="email"
+                            id="email"
+                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
+                                formik.errors.email && formik.touched.email
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                            }`}
+                            placeholder=" "
+                            {...formik.getFieldProps("email")}
+                        />
+                        <label
+                            htmlFor="email"
+                            className={`absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
+                                formik.errors.email && formik.touched.email
+                                    ? "text-red-500"
+                                    : "text-gray-500"
+                            }`}
+                        >
+                            Почта
+                        </label>
+                    </div>
+                    <div className="relative mb-6">
+                        <input
+                            type="password"
+                            id="password"
+                            className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            placeholder=" "
+                            {...formik.getFieldProps("password")}
+                        />
+                        <label
+                            htmlFor="password"
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+                        >
+                            Пароль
+                        </label>
+                    </div>
+                    <div className="relative mb-6">
+                        <input
+                            type="password"
+                            id="passwordConfirm"
+                            className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            placeholder=" "
+                            {...formik.getFieldProps("passwordConfirm")}
+                        />
+                        <label
+                            htmlFor="passwordConfirm"
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+                        >
+                            Подтвердите пароль
+                        </label>
                     </div>
 
                     <div>

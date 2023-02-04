@@ -53,7 +53,7 @@ export default function Login() {
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <input type="hidden" name="remember" value="true" />
 
-                    <div className="relative mb-6">
+                    <div className="relative">
                         <input
                             type="email"
                             id="email"
@@ -72,7 +72,7 @@ export default function Login() {
                             Почта
                         </label>
                     </div>
-                    <div className="relative mb-6">
+                    <div className="relative">
                         <input
                             type="password"
                             id="password"

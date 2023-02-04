@@ -83,7 +83,7 @@ export default function Register() {
             </div>
         );
     }
-
+    //TODO: decompose input element
     return (
         <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-8">
@@ -96,7 +96,7 @@ export default function Register() {
                 <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
                     <input type="hidden" name="remember" value="true" />
 
-                    <div className="relative mb-6">
+                    <div className="relative">
                         <input
                             type="text"
                             id="username"
@@ -119,7 +119,7 @@ export default function Register() {
                             Имя пользователя
                         </label>
                     </div>
-                    <div className="relative mb-6">
+                    <div className="relative">
                         <input
                             type="email"
                             id="email"
@@ -142,32 +142,48 @@ export default function Register() {
                             Почта
                         </label>
                     </div>
-                    <div className="relative mb-6">
+                    <div className="relative">
                         <input
                             type="password"
                             id="password"
-                            className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
+                                formik.errors.password && formik.touched.password
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                            }`}
                             placeholder=" "
                             {...formik.getFieldProps("password")}
                         />
                         <label
                             htmlFor="password"
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+                            className={`absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
+                                formik.errors.password && formik.touched.password
+                                    ? "text-red-500"
+                                    : "text-gray-500"
+                            }`}
                         >
                             Пароль
                         </label>
                     </div>
-                    <div className="relative mb-6">
+                    <div className="relative">
                         <input
                             type="password"
                             id="passwordConfirm"
-                            className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
+                                formik.errors.passwordConfirm && formik.touched.passwordConfirm
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                            }`}
                             placeholder=" "
                             {...formik.getFieldProps("passwordConfirm")}
                         />
                         <label
                             htmlFor="passwordConfirm"
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+                            className={`absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
+                                formik.errors.passwordConfirm && formik.touched.passwordConfirm
+                                    ? "text-red-500"
+                                    : "text-gray-500"
+                            }`}
                         >
                             Подтвердите пароль
                         </label>

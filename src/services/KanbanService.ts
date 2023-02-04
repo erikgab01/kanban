@@ -97,7 +97,6 @@ export default class KanbanService {
             if (source === "Local") {
                 return;
             }
-            console.log("listener");
             callback(doc.data() as KanbanData);
         });
         return unsubscribe;

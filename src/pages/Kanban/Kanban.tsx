@@ -4,12 +4,13 @@ import TaskCreator from "./TaskCreator";
 import TasksBoard from "./TasksBoard";
 import { auth } from "../../firebase";
 import useDebounce from "../../hooks/useDebounce";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
 import { KanbanStructure } from "../../types";
 import KanbanService from "../../services/KanbanService";
 import Modal from "../../components/ui/Modal";
 import CollabList from "./CollabList";
+import { toast } from "react-toastify";
 
 type KanbanParams = {
     kanbanId: string;
@@ -21,7 +22,7 @@ export default function Kanban() {
     const [isHost, setIsHost] = useState(false);
     const [isShow, setIsShow] = useState(false);
     const debouncedGroups = useDebounce<KanbanStructure[]>(groups, 1000);
-
+    const navigate = useNavigate();
     // Kanban id is always present, but typescript doesn't know that
     // Either use ! or cast it to kanbanParams
     const { kanbanId } = useParams() as KanbanParams;
@@ -50,6 +51,14 @@ export default function Kanban() {
     // Realtime listening to db changes
     useEffect(() => {
         const unsub = KanbanService.setKanbanListener(kanbanId, (kanbanData) => {
+            // leave page if not in collab list and not host
+            if (
+                !kanbanData.collaborators.includes(auth.currentUser!.uid) &&
+                kanbanData.host !== auth.currentUser?.uid
+            ) {
+                toast.info("Вы были удалены из коллабораторов");
+                navigate("/");
+            }
             setGroups(JSON.parse(kanbanData.kanban));
         });
         return unsub;

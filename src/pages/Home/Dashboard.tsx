@@ -91,8 +91,8 @@ export default function Dashboard() {
 
     return (
         <div className="flex flex-col gap-4 min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-            <h1 className="font-medium text-lg text-center">Добро пожаловать</h1>
-            <h4 className="font-medium text-center">Ваши доски</h4>
+            <h1 className="font-medium text-xl">Добро пожаловать</h1>
+            <h4 className="text-lg">Ваши доски</h4>
             <div className="grid gap-4 grid-cols-3">
                 {isLoadingHostKanbans ? (
                     <>

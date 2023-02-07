@@ -62,7 +62,7 @@ export default function Kanban() {
             setGroups(JSON.parse(kanbanData.kanban));
         });
         return unsub;
-    }, [kanbanId]);
+    }, [kanbanId, navigate]);
 
     return loading ? (
         <div className="mt-40 flex justify-center">

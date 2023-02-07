@@ -15,13 +15,13 @@ export default function Register() {
 
     const formik = useFormik({
         initialValues: {
-            username: "",
+            user: "",
             email: "",
             password: "",
             passwordConfirm: "",
         },
         validationSchema: Yup.object({
-            username: Yup.string()
+            user: Yup.string()
                 .max(15, "Имя пользователя должно быть меньше 15 символов")
                 .required("Имя пользователя обязательно"),
             email: Yup.string().email("Неверный формат почты").required("Почта обязательна"),
@@ -44,7 +44,7 @@ export default function Register() {
         setLoading(true);
         try {
             const userCredential = await signup(values.email, values.password);
-            await updateProfileName(values.username);
+            await updateProfileName(values.user);
             // Add user to firestore
             await UserService.addUserToFirestore(
                 userCredential.user.uid,
@@ -99,19 +99,19 @@ export default function Register() {
                     <div className="relative">
                         <input
                             type="text"
-                            id="username"
+                            id="user"
                             className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
-                                formik.errors.username && formik.touched.username
+                                formik.errors.user && formik.touched.user
                                     ? "border-red-500"
                                     : "border-gray-300"
                             }`}
                             placeholder=" "
-                            {...formik.getFieldProps("username")}
+                            {...formik.getFieldProps("user")}
                         />
                         <label
-                            htmlFor="username"
+                            htmlFor="user"
                             className={`absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
-                                formik.errors.username && formik.touched.username
+                                formik.errors.user && formik.touched.user
                                     ? "text-red-500"
                                     : "text-gray-500"
                             }`}

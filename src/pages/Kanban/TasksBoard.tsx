@@ -77,7 +77,7 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
     }
     return (
         <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-            <section className="flex gap-12 mt-8">
+            <section className="flex gap-12 mt-8 flex-1">
                 {groups.map((group, groupI) => {
                     const { r, g, b } = hexToRgb(group.color);
                     const textColor =
@@ -95,7 +95,7 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
                                     <div
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
-                                        className="min-h-[70px] relative mb-4"
+                                        className="h-full relative mb-4"
                                     >
                                         {group.tasks.map((task, taskI) => (
                                             <Task
@@ -109,20 +109,20 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
                                             />
                                         ))}
                                         {provided.placeholder}
+                                        {group.isTrashBin && group.tasks.length !== 0 ? (
+                                            <button
+                                                disabled={isDragging}
+                                                onClick={clearTrashBin}
+                                                className="bg-red-600 rounded-lg text-white py-3 mt-4 w-full"
+                                            >
+                                                Очистить
+                                            </button>
+                                        ) : (
+                                            <>{/* TODO: show placeholder */}</>
+                                        )}
                                     </div>
                                 )}
                             </Droppable>
-                            {group.isTrashBin && group.tasks.length !== 0 ? (
-                                <button
-                                    disabled={isDragging}
-                                    onClick={clearTrashBin}
-                                    className="bg-red-600 rounded-lg text-white py-3"
-                                >
-                                    Очистить
-                                </button>
-                            ) : (
-                                <></>
-                            )}
                         </div>
                     );
                 })}

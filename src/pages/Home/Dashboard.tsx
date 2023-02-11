@@ -90,10 +90,10 @@ export default function Dashboard() {
     }, []);
 
     return (
-        <div className="flex flex-col gap-4 min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-4 items-center justify-center py-12 px-4  sm:px-6 lg:px-8">
             <h1 className="font-medium text-xl">Добро пожаловать</h1>
             <h4 className="text-lg">Ваши доски</h4>
-            <div className="grid gap-4 grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {isLoadingHostKanbans ? (
                     <>
                         <KanbanSkeleton />
@@ -129,11 +129,13 @@ export default function Dashboard() {
                     </>
                 )}
             </div>
-            <h4 className="font-medium text-cente mt-5">Доски, к которым вам дали доступ</h4>
+            <h4 className="font-medium text-center mt-5">Доски, к которым вам дали доступ</h4>
             {kanbanCollabList.length === 0 && !isLoadingCollabKanbans && (
-                <p>Попросите владельца доски дать вам доступ, после этого вы увидите её тут</p>
+                <p className="text-center">
+                    Попросите владельца доски дать вам доступ, после этого вы увидите её тут
+                </p>
             )}
-            <div className="grid gap-4 grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {isLoadingCollabKanbans ? (
                     <>
                         <KanbanSkeleton />

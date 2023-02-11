@@ -71,7 +71,7 @@ export default function Kanban() {
             </span>
         </div>
     ) : (
-        <div className="container mx-auto">
+        <div className="container mx-auto flex flex-col h-full">
             <div className="flex gap-8">
                 <TaskCreator setGroups={setGroups} />
                 {isHost && <InviteMenu kanbanId={kanbanId} />}

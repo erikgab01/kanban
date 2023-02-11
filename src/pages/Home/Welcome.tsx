@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Welcome() {
     return (
-        <div className="flex flex-col gap-4 min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-4 items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <h1 className="font-medium text-xl text-center">Добро пожаловать</h1>
             <p className="text-lg text-center">
                 Перед началом работы необходимо войти в свой аккаунт или зарегистрировать новый

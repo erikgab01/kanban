@@ -1,12 +1,12 @@
-import { DeleteConfirmation } from "../../components/ui/DeleteConfirmation";
+import { DeleteConfirmation } from "../../components/DeleteConfirmation";
 import { KanbanForm } from "./KanbanForm";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Modal from "../../components/ui/Modal";
+import Modal from "../../components/Modal";
 import { auth } from "../../firebase";
 import useContextMenu from "../../hooks/useContextMenu";
-import ContextMenu from "../../components/ui/ContextMenu";
+import ContextMenu from "../../components/ContextMenu";
 import { ContextMenuOption } from "../../types";
 import KanbanSkeleton from "./KanbanSkeleton";
 import KanbanService from "../../services/KanbanService";

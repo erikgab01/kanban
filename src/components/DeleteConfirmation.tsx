@@ -1,5 +1,5 @@
 import React from "react";
-import { KanbanData } from "../../types";
+import { KanbanData } from "../types";
 
 interface DeleteConfirmProps {
     target: KanbanData | null;

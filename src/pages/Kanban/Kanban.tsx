@@ -1,4 +1,4 @@
-import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import { useState, useEffect } from "react";
 import TaskCreator from "./TaskCreator";
 import TasksBoard from "./TasksBoard";
@@ -8,7 +8,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import InviteMenu from "./InviteMenu";
 import { KanbanStructure } from "../../types";
 import KanbanService from "../../services/KanbanService";
-import Modal from "../../components/ui/Modal";
+import Modal from "../../components/Modal";
 import CollabList from "./CollabList";
 import { toast } from "react-toastify";
 

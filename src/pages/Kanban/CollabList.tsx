@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import KanbanService from "../../services/KanbanService";
 import { UserData } from "../../types";
 import UserService from "./../../services/UserService";
-import LoadingSpinner from "./../../components/ui/LoadingSpinner";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import { toast } from "react-toastify";
 
 interface CollabListProps {

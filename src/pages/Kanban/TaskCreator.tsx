@@ -18,7 +18,7 @@ export default function TaskCreator({ setGroups }: TaskCreatorProps) {
         setTaskName("");
     }
     return (
-        <section className="bg-white mt-8 rounded-lg w-fit p-4">
+        <section className="bg-white mt-8 rounded-lg w-fit p-4 shadow-md">
             <h4 className="mb-2">Новая задача</h4>
             <form onSubmit={addTask} className="flex justify-between gap-6">
                 <input

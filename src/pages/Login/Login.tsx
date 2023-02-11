@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useAuth } from "../../Contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
-import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 // TODO: forget password
 export default function Login() {

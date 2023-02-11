@@ -1,4 +1,4 @@
-import { ContextMenuOption } from "../../types";
+import { ContextMenuOption } from "../types";
 
 interface ContextMenuProps {
     top: number;

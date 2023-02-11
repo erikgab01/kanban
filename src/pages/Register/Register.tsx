@@ -1,6 +1,6 @@
 import { useState } from "react";
 import UserService from "../../services/UserService";
-import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import { useAuth } from "../../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";

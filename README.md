@@ -7,6 +7,7 @@ Live version can be visited at: [kanban-erikgab01.vercel.app](https://kanban-eri
 ## Requirements (Prerequisites)
 
 - Node.js + npm [Install](https://nodejs.org/en/download/)
+- Firebase project with auth and firestore [Link](https://firebase.google.com/)
 
 ## Installation
 
@@ -20,7 +21,7 @@ git clone https://github.com/erikgab01/kanban.git
 npm install
 ```
 
-- Go to project root folder, create `.env` file and copy the contents of `.env.sample` to it. Replace some variables if needed.
+- Go to project root folder, create `.env` file and copy the contents of `.env.sample` to it. Replace variables with your own firebase tokens.
 
 ## Available Scripts
 

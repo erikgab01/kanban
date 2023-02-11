@@ -10,7 +10,7 @@ export default function Layout() {
         navigate("/");
     }
     return (
-        <>
+        <div className="flex flex-col h-screen">
             <nav className="text-white bg-sky-600 py-4">
                 <div className="container mx-auto flex items-center justify-between">
                     <h1 className="text-2xl font-medium">
@@ -28,6 +28,6 @@ export default function Layout() {
                 <ToastContainer position="bottom-right" newestOnTop />
             </nav>
             <Outlet />
-        </>
+        </div>
     );
 }

@@ -71,11 +71,13 @@ export default function Kanban() {
             </span>
         </div>
     ) : (
-        <div className="container mx-auto flex flex-col h-full">
+        <div className="container mx-auto flex flex-col flex-1">
             <div className="flex gap-8">
                 <TaskCreator setGroups={setGroups} />
                 {isHost && <InviteMenu kanbanId={kanbanId} />}
-                <button onClick={() => setIsShow(true)}>Показать список коллабораторов</button>
+                <button className="dark:text-white" onClick={() => setIsShow(true)}>
+                    Показать список коллабораторов
+                </button>
             </div>
             <TasksBoard groups={groups} setGroups={setGroups} />
             <Modal isShow={isShow} setIsShow={setIsShow}>

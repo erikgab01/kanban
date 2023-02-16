@@ -10,8 +10,8 @@ export default function Layout() {
         navigate("/");
     }
     return (
-        <div className="flex flex-col h-screen">
-            <nav className="text-white bg-sky-600 py-4">
+        <div className="flex flex-col min-h-screen bg-light-blue dark:bg-dark-blue-800">
+            <nav className="text-white py-4 shadow-md bg-sky-600 dark:bg-dark-purple">
                 <div className="container mx-auto flex items-center justify-between">
                     <h1 className="text-2xl font-medium">
                         <Link to={"/"}>Канбан-доска</Link>

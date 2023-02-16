@@ -6,7 +6,10 @@
 
 body {
     margin: 0;
-    background-color: rgb(228, 238, 250);
     box-sizing: border-box;
     font-family: "Roboto", sans-serif;
+}
+
+.container {
+    padding: 0 2rem;
 }

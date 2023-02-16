@@ -11,7 +11,7 @@ export default function KanbanCard({ kanban, contextMenuHandler }: KanbanCardPro
         <Link
             key={kanban.id}
             to={`/kanban/${kanban.id}`}
-            className="w-60 h-28 p-6 text-center bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+            className="w-60 h-28 p-6 text-center bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-dark-blue-400 dark:border-dark-purple dark:hover:bg-gray-700"
             onContextMenu={contextMenuHandler}
         >
             <h5 className="mb-2 text-xl truncate font-bold tracking-tight text-gray-900 dark:text-white">

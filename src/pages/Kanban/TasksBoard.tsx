@@ -77,7 +77,7 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
     }
     return (
         <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-            <section className="flex gap-12 mt-8 flex-1">
+            <section className="flex gap-12 my-8 flex-1">
                 {groups.map((group, groupI) => {
                     const { r, g, b } = hexToRgb(group.color);
                     const textColor =
@@ -95,7 +95,7 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
                                     <div
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
-                                        className="h-full relative mb-4"
+                                        className="flex-1"
                                     >
                                         {group.tasks.map((task, taskI) => (
                                             <Task
@@ -113,7 +113,8 @@ export default function TasksBoard({ groups, setGroups }: TasksBoardProps) {
                                             <button
                                                 disabled={isDragging}
                                                 onClick={clearTrashBin}
-                                                className="bg-red-600 rounded-lg text-white py-3 mt-4 w-full"
+                                                className="bg-red-600 rounded-lg text-white py-3 mt-4 w-full
+                                                 dark:bg-red-800"
                                             >
                                                 Очистить
                                             </button>

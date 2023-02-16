@@ -85,10 +85,10 @@ export default function Register() {
     }
     //TODO: decompose input element
     return (
-        <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 text-gray-900 dark:text-white">
             <div className="w-full max-w-md space-y-8">
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
+                    <h2 className="mt-6 text-center text-3xl font-bold">
                         Зарегистрировать аккаунт
                     </h2>
                 </div>
@@ -100,7 +100,7 @@ export default function Register() {
                         <input
                             type="text"
                             id="user"
-                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
+                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm bg-gray-50 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:bg-dark-blue-400 dark:focus:border-dark-purple ${
                                 formik.errors.user && formik.touched.user
                                     ? "border-red-500"
                                     : "border-gray-300"
@@ -110,7 +110,7 @@ export default function Register() {
                         />
                         <label
                             htmlFor="user"
-                            className={`absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
+                            className={`absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 dark:peer-focus:text-purple-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
                                 formik.errors.user && formik.touched.user
                                     ? "text-red-500"
                                     : "text-gray-500"
@@ -123,7 +123,7 @@ export default function Register() {
                         <input
                             type="email"
                             id="email"
-                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
+                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm bg-gray-50 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:bg-dark-blue-400 dark:focus:border-dark-purple ${
                                 formik.errors.email && formik.touched.email
                                     ? "border-red-500"
                                     : "border-gray-300"
@@ -133,7 +133,7 @@ export default function Register() {
                         />
                         <label
                             htmlFor="email"
-                            className={`absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
+                            className={`absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 dark:peer-focus:text-purple-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
                                 formik.errors.email && formik.touched.email
                                     ? "text-red-500"
                                     : "text-gray-500"
@@ -146,7 +146,7 @@ export default function Register() {
                         <input
                             type="password"
                             id="password"
-                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
+                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm bg-gray-50 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:bg-dark-blue-400 dark:focus:border-dark-purple ${
                                 formik.errors.password && formik.touched.password
                                     ? "border-red-500"
                                     : "border-gray-300"
@@ -156,7 +156,7 @@ export default function Register() {
                         />
                         <label
                             htmlFor="password"
-                            className={`absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
+                            className={`absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 dark:peer-focus:text-purple-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
                                 formik.errors.password && formik.touched.password
                                     ? "text-red-500"
                                     : "text-gray-500"
@@ -169,7 +169,7 @@ export default function Register() {
                         <input
                             type="password"
                             id="passwordConfirm"
-                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
+                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm bg-gray-50 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:bg-dark-blue-400 dark:focus:border-dark-purple ${
                                 formik.errors.passwordConfirm && formik.touched.passwordConfirm
                                     ? "border-red-500"
                                     : "border-gray-300"
@@ -179,7 +179,7 @@ export default function Register() {
                         />
                         <label
                             htmlFor="passwordConfirm"
-                            className={`absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
+                            className={`absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 dark:peer-focus:text-purple-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
                                 formik.errors.passwordConfirm && formik.touched.passwordConfirm
                                     ? "text-red-500"
                                     : "text-gray-500"
@@ -193,11 +193,11 @@ export default function Register() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="group relative flex w-full justify-center rounded-md border border-transparent bg-sky-600 py-2 px-4 text-sm font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                            className="group relative flex w-full justify-center rounded-md border border-transparent bg-sky-600 py-2 px-4 text-sm font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:bg-dark-purple dark:hover:bg-purple-800"
                         >
                             <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                                 <svg
-                                    className="h-5 w-5 text-sky-500 group-hover:text-sky-400"
+                                    className="h-5 w-5 text-sky-500 group-hover:text-sky-400 dark:text-gray-300 dark:group-hover:text-gray-300"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20"
                                     fill="currentColor"

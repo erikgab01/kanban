@@ -12,7 +12,7 @@ export default function Modal({ isShow, setIsShow, children }: ModalProps) {
             onClick={() => setIsShow(false)}
         >
             <div
-                className="flex justify-center items-center flex-col bg-white rounded-lg border shadow py-10 w-full max-w-md"
+                className="flex justify-center items-center flex-col bg-white rounded-lg border shadow py-10 w-full max-w-md  text-gray-900 dark:bg-dark-blue-400 dark:text-white dark:border-dark-purple"
                 onClick={(e) => e.stopPropagation()}
             >
                 {children}

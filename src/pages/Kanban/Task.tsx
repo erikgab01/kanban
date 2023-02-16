@@ -60,12 +60,12 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }: 
                         snapshot.draggingOver,
                         color
                     )}
-                    className="bg-white border-l-4 p-4 rounded-md mt-4 flex items-center gap-4"
+                    className="bg-white border-l-4 p-4 rounded-md mt-4 flex items-center gap-4 dark:bg-dark-blue-400 dark:text-white"
                     onDoubleClick={() => setIsEditing(true)}
                 >
                     {isEditing ? (
                         <textarea
-                            className="w-full resize-none overflow-hidden outline-none bg-inherit border-b-2 border-blue-400"
+                            className="w-full resize-none overflow-hidden outline-none bg-inherit border-b-2 border-blue-400 dark:border-dark-purple"
                             value={task.content}
                             onChange={updateTask}
                             onKeyDown={(e) => (e.key === "Enter" ? setIsEditing(!isEditing) : 0)}
@@ -84,7 +84,7 @@ export default function Task({ task, taskI, groupI, color, groups, setGroups }: 
                     <button
                         className={
                             isEditing
-                                ? "bg-blue-100 text-blue-400 rounded-md p-1 outline-none"
+                                ? "bg-blue-100 text-blue-400 rounded-md p-1 outline-none dark:text-dark-purple dark:bg-inherit"
                                 : "bg-inherit p-1 outline-none"
                         }
                         onClick={() => setIsEditing(!isEditing)}

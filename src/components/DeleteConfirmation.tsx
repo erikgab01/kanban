@@ -29,7 +29,7 @@ export function DeleteConfirmation({
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 ></path>
             </svg>
-            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+            <h3 className="mb-5 text-lg font-normal">
                 {`Вы уверены, что хотите удалить доску ${target?.name}?`}
             </h3>
             <button

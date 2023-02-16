@@ -90,7 +90,7 @@ export default function Dashboard() {
     }, []);
 
     return (
-        <div className="flex flex-col gap-4 items-center justify-center py-12 px-4  sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-4 items-center justify-center py-12 px-4 sm:px-6 lg:px-8 dark:text-white">
             <h1 className="font-medium text-xl">Добро пожаловать</h1>
             <h4 className="text-lg">Ваши доски</h4>
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -121,7 +121,7 @@ export default function Dashboard() {
                             />
                         ))}
                         <button
-                            className="w-60 h-28 p-6 text-2xl bg-white border border-dashed border-gray-600 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                            className="w-60 h-28 p-6 text-2xl bg-white border border-dashed border-gray-600 rounded-lg shadow-md hover:bg-gray-100 dark:bg-dark-blue-400 dark:border-dark-purple dark:hover:bg-gray-700"
                             onClick={() => setIsShowCreateModal(true)}
                         >
                             <FontAwesomeIcon icon={["fas", "plus"]} />

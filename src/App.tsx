@@ -9,6 +9,7 @@ import { AuthProvider } from "./Contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import KanbanService from "./services/KanbanService";
 import Layout from "./components/Layout";
+import { ThemeProvider } from "./Contexts/ThemeContext";
 
 library.add(fas);
 
@@ -47,7 +48,9 @@ const router = createBrowserRouter([
 function App() {
     return (
         <AuthProvider>
-            <RouterProvider router={router} />
+            <ThemeProvider>
+                <RouterProvider router={router} />
+            </ThemeProvider>
         </AuthProvider>
     );
 }

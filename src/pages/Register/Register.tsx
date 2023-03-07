@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
+import InputWithFloatLabel from "../../components/InputWithFloatLabel";
 
 export default function Register() {
     const [loading, setLoading] = useState(false);
@@ -95,99 +96,40 @@ export default function Register() {
                 {checkAndDisplayErrors()}
                 <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
                     <input type="hidden" name="remember" value="true" />
-
-                    <div className="relative">
-                        <input
-                            type="text"
-                            id="user"
-                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm bg-gray-50 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:bg-dark-blue-400 dark:focus:border-dark-purple ${
-                                formik.errors.user && formik.touched.user
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                            placeholder=" "
-                            {...formik.getFieldProps("user")}
-                        />
-                        <label
-                            htmlFor="user"
-                            className={`absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 dark:peer-focus:text-purple-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
-                                formik.errors.user && formik.touched.user
-                                    ? "text-red-500"
-                                    : "text-gray-500"
-                            }`}
-                        >
-                            Имя пользователя
-                        </label>
-                    </div>
-                    <div className="relative">
-                        <input
-                            type="email"
-                            id="email"
-                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm bg-gray-50 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:bg-dark-blue-400 dark:focus:border-dark-purple ${
-                                formik.errors.email && formik.touched.email
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                            placeholder=" "
-                            {...formik.getFieldProps("email")}
-                        />
-                        <label
-                            htmlFor="email"
-                            className={`absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 dark:peer-focus:text-purple-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
-                                formik.errors.email && formik.touched.email
-                                    ? "text-red-500"
-                                    : "text-gray-500"
-                            }`}
-                        >
-                            Почта
-                        </label>
-                    </div>
-                    <div className="relative">
-                        <input
-                            type="password"
-                            id="password"
-                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm bg-gray-50 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:bg-dark-blue-400 dark:focus:border-dark-purple ${
-                                formik.errors.password && formik.touched.password
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                            placeholder=" "
-                            {...formik.getFieldProps("password")}
-                        />
-                        <label
-                            htmlFor="password"
-                            className={`absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 dark:peer-focus:text-purple-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
-                                formik.errors.password && formik.touched.password
-                                    ? "text-red-500"
-                                    : "text-gray-500"
-                            }`}
-                        >
-                            Пароль
-                        </label>
-                    </div>
-                    <div className="relative">
-                        <input
-                            type="password"
-                            id="passwordConfirm"
-                            className={`block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm bg-gray-50 border-0 border-b-2 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:bg-dark-blue-400 dark:focus:border-dark-purple ${
-                                formik.errors.passwordConfirm && formik.touched.passwordConfirm
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                            placeholder=" "
-                            {...formik.getFieldProps("passwordConfirm")}
-                        />
-                        <label
-                            htmlFor="passwordConfirm"
-                            className={`absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 dark:peer-focus:text-purple-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
-                                formik.errors.passwordConfirm && formik.touched.passwordConfirm
-                                    ? "text-red-500"
-                                    : "text-gray-500"
-                            }`}
-                        >
-                            Подтвердите пароль
-                        </label>
-                    </div>
+                    <InputWithFloatLabel
+                        id="user"
+                        label="Имя пользователя"
+                        type="text"
+                        placeholder=" "
+                        isError={Boolean(formik.errors.user && formik.touched.user)}
+                        {...formik.getFieldProps("user")}
+                    />
+                    <InputWithFloatLabel
+                        id="email"
+                        label="Почта"
+                        type="email"
+                        placeholder=" "
+                        isError={Boolean(formik.errors.email && formik.touched.email)}
+                        {...formik.getFieldProps("email")}
+                    />
+                    <InputWithFloatLabel
+                        id="password"
+                        label="Пароль"
+                        type="password"
+                        placeholder=" "
+                        isError={Boolean(formik.errors.password && formik.touched.password)}
+                        {...formik.getFieldProps("password")}
+                    />
+                    <InputWithFloatLabel
+                        id="passwordConfirm"
+                        label="Подтвердите пароль"
+                        type="password"
+                        placeholder=" "
+                        isError={Boolean(
+                            formik.errors.passwordConfirm && formik.touched.passwordConfirm
+                        )}
+                        {...formik.getFieldProps("passwordConfirm")}
+                    />
 
                     <div>
                         <button

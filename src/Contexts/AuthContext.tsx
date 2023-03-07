@@ -11,6 +11,7 @@ import {
     browserSessionPersistence,
     User,
     UserCredential,
+    sendPasswordResetEmail,
 } from "firebase/auth";
 
 interface CurrentUserContextType {
@@ -19,6 +20,7 @@ interface CurrentUserContextType {
     login: (email: string, password: string, remember?: boolean) => Promise<UserCredential>;
     logout: () => void;
     updateProfileName: (name: string) => void;
+    resetPassword: (email: string) => void;
 }
 
 const AuthContext = React.createContext<CurrentUserContextType>({} as CurrentUserContextType);
@@ -68,12 +70,17 @@ export function AuthProvider({ children }: PropsWithChildren) {
         }
     }
 
+    function resetPassword(email: string) {
+        return sendPasswordResetEmail(auth, email);
+    }
+
     const value = {
         currentUser,
         signup,
         login,
         logout,
         updateProfileName,
+        resetPassword,
     };
 
     return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;

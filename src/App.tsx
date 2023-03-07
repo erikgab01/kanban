@@ -10,6 +10,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import KanbanService from "./services/KanbanService";
 import Layout from "./components/Layout";
 import { ThemeProvider } from "./Contexts/ThemeContext";
+import ForgetPassword from "./pages/Login/ForgetPassword";
 
 library.add(fas);
 
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
             {
                 path: "login",
                 element: <Login />,
+            },
+            {
+                path: "reset",
+                element: <ForgetPassword />,
             },
             {
                 path: "register",

@@ -27,7 +27,7 @@ export default function Kanban() {
     // Either use ! or cast it to kanbanParams
     const { kanbanId } = useParams() as KanbanParams;
 
-    //TODO: improve design, make separators for columns in kanban, a tick to move to "done", rename columns
+    //TODO: improve design, rename columns
 
     //Read from db
     useEffect(() => {
